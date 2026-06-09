@@ -1361,8 +1361,8 @@ function _renderROrisks(){
         <div style="display:flex;gap:6px;align-items:center;flex-shrink:0">
           <span class="tag" style="background:${sv.bg};color:${sv.text}">${r.severity}</span>
           <span class="tag" style="background:${os.bg};color:${os.text}">${r.status}</span>
-          <button onclick="openROModal('risk',${r.id})" style="background:none;border:none;cursor:pointer;color:var(--text2);font-size:14px"><i class="ti ti-pencil"></i></button>
-          <button onclick="delROItem('risk',${r.id})" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:14px"><i class="ti ti-trash"></i></button>
+          <button onclick="openROModal('risk','${r.id}')" style="background:none;border:none;cursor:pointer;color:var(--text2);font-size:14px"><i class="ti ti-pencil"></i></button>
+          <button onclick="delROItem('risk','${r.id}')" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:14px"><i class="ti ti-trash"></i></button>
         </div>
       </div>
       <div style="font-size:11px;color:var(--text3)">Prob: ${r.probability||'—'}${r.responsible?' · Resp: '+r.responsible:''}</div>
@@ -1482,7 +1482,7 @@ function openROModal(type,id=null){
   document.getElementById('ro-modal-body').innerHTML=RO_FORMS[type];
   if(id){
     const store=type==='risk'?roRisks:type==='incident'?roIncidents:type==='desenq'?roDesenqs:roIndicators;
-    const item=store.find(x=>x.id===id);if(!item)return;
+    const item=store.find(x=>String(x.id)===String(id));if(!item)return;
     const g=id=>document.getElementById(id);
     if(g('rof-title'))g('rof-title').value=item.name||item.title||'';
     if(g('rof-sev'))g('rof-sev').value=item.impact||item.severity||'médio';
@@ -1543,7 +1543,7 @@ async function delROItem(type,id){
   const tables={risk:'risks',incident:'risk_incidents',desenq:'risk_desenquadramentos',indicator:'risk_indicators'};
   try{
     await del(tables[type],`?id=eq.${id}`);
-    if(type==='risk')roRisks=roRisks.filter(x=>x.id!==id);
+    if(type==='risk')roRisks=roRisks.filter(x=>String(x.id)!==String(id));
     else if(type==='incident')roIncidents=roIncidents.filter(x=>x.id!==id);
     else if(type==='desenq')roDesenqs=roDesenqs.filter(x=>x.id!==id);
     else roIndicators=roIndicators.filter(x=>x.id!==id);
