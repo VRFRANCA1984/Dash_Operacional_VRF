@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -22,17 +21,17 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;font-size:15px}
-.sidebar{width:var(--sidebar-w);min-height:100vh;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;position:fixed;top:0;left:0;bottom:0;z-index:50;overflow-y:auto}
-.sidebar-logo{padding:1.25rem 1.25rem 1rem;border-bottom:1px solid var(--border)}
+.sidebar{width:var(--sidebar-w);min-height:100vh;background:#dbeafe;border-right:1px solid #93c5fd;display:flex;flex-direction:column;flex-shrink:0;position:fixed;top:0;left:0;bottom:0;z-index:50;overflow-y:auto}
+.sidebar-logo{padding:1.25rem 1.25rem 1rem;border-bottom:1px solid #93c5fd}
 .sidebar-logo h1{font-size:15px;font-weight:500}
 .sidebar-logo p{font-size:11px;color:var(--text3);margin-top:2px}
 .sidebar-nav{padding:.75rem;flex:1}
 .nav-section{font-size:10px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;padding:.5rem .5rem .35rem;margin-top:.5rem}
 .nav-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:var(--radius);cursor:pointer;font-size:13px;color:var(--text2);transition:background .15s,color .15s;margin-bottom:2px;border:none;background:none;width:100%;text-align:left}
-.nav-item:hover{background:var(--surface2);color:var(--text)}
-.nav-item.active{background:var(--blue-bg);color:var(--blue-text);font-weight:500}
+.nav-item:hover{background:#bfdbfe;color:#1e3a5f}
+.nav-item.active{background:#ffedd5;color:#c2410c;font-weight:500}
 .nav-item i{font-size:16px;flex-shrink:0}
-.sidebar-footer{padding:.75rem 1rem;border-top:1px solid var(--border);font-size:11px;color:var(--text3)}
+.sidebar-footer{padding:.75rem 1rem;border-top:1px solid #93c5fd;font-size:11px;color:#1e40af}
 .sync-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);margin-right:5px;vertical-align:middle}
 .sync-dot.loading{background:var(--amber);animation:pulse 1s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
@@ -199,6 +198,14 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;
 input[type=range]::-moz-range-thumb{width:15px;height:15px;border-radius:50%;border:none;background:var(--thumb-color,#3b82f6);cursor:pointer}
 input[type=range]::-moz-range-track{background:#e5e7eb;height:5px;border-radius:4px}
 input[type=range]::-moz-range-progress{background:var(--thumb-color,#3b82f6);height:5px;border-radius:4px}
+
+.metric-c1{background:#eff6ff;border-color:#bfdbfe}.metric-c1 .metric-value{color:#1d4ed8}
+.metric-c2{background:#f0fdf4;border-color:#bbf7d0}.metric-c2 .metric-value{color:#15803d}
+.metric-c3{background:#fdf4ff;border-color:#e9d5ff}.metric-c3 .metric-value{color:#7e22ce}
+.metric-c4{background:#fff7ed;border-color:#fed7aa}.metric-c4 .metric-value{color:#c2410c}
+.metric-c5{background:#f0fdfa;border-color:#99f6e4}.metric-c5 .metric-value{color:#0f766e}
+.metric-c6{background:#fefce8;border-color:#fef08a}.metric-c6 .metric-value{color:#a16207}
+.metric-red{background:#fef2f2;border-color:#fecaca}.metric-red .metric-value{color:#b91c1c}
 .mob-menu-btn{display:none;position:fixed;top:12px;left:12px;z-index:60;background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);padding:8px;cursor:pointer;align-items:center;justify-content:center}
 @media(max-width:768px){.sidebar{transform:translateX(-100%);transition:transform .2s}.sidebar.open{transform:none}.main{margin-left:0}.mob-menu-btn{display:flex}}
 </style>
@@ -238,12 +245,12 @@ input[type=range]::-moz-range-progress{background:var(--thumb-color,#3b82f6);hei
     </div>
   </div>
   <div class="metrics">
-    <div class="metric"><div class="metric-label">Membros</div><div class="metric-value" id="m-total">—</div></div>
-    <div class="metric"><div class="metric-label">Média geral</div><div class="metric-value" id="m-avg">—</div></div>
-    <div class="metric"><div class="metric-label">Total 1:1s</div><div class="metric-value" id="m-sessions">—</div></div>
-    <div class="metric"><div class="metric-label">Em evolução</div><div class="metric-value" id="m-growing">—</div></div>
-    <div class="metric"><div class="metric-label">PDIs ativos</div><div class="metric-value" id="m-pdis">—</div></div>
-    <div class="metric"><div class="metric-label">Overdue</div><div class="metric-value" id="m-overdue">—</div></div>
+    <div class="metric metric-c1"><div class="metric-label">Membros</div><div class="metric-value" id="m-total">—</div></div>
+    <div class="metric metric-c2"><div class="metric-label">Média geral</div><div class="metric-value" id="m-avg">—</div></div>
+    <div class="metric metric-c3"><div class="metric-label">Total 1:1s</div><div class="metric-value" id="m-sessions">—</div></div>
+    <div class="metric metric-c4"><div class="metric-label">Em evolução</div><div class="metric-value" id="m-growing">—</div></div>
+    <div class="metric metric-c5"><div class="metric-label">PDIs ativos</div><div class="metric-value" id="m-pdis">—</div></div>
+    <div class="metric metric-red"><div class="metric-label">Overdue</div><div class="metric-value" id="m-overdue">—</div></div>
   </div>
   <div class="alert-bar" id="gp-alert"><i class="ti ti-clock" style="flex-shrink:0"></i><span>Sem 1:1 há mais de 30 dias:</span><span id="alert-names"></span></div>
   <div class="filter-bar">
@@ -365,11 +372,11 @@ input[type=range]::-moz-range-progress{background:var(--thumb-color,#3b82f6);hei
     </div>
   </div>
   <div class="metrics">
-    <div class="metric"><div class="metric-label">Parceiros</div><div class="metric-value" id="tp-m-total">—</div></div>
-    <div class="metric"><div class="metric-label">Contratos ativos</div><div class="metric-value" id="tp-m-ativos">—</div></div>
-    <div class="metric"><div class="metric-label">Vencendo 30d</div><div class="metric-value" id="tp-m-venc">—</div></div>
-    <div class="metric"><div class="metric-label">SLA em risco</div><div class="metric-value" id="tp-m-sla">—</div></div>
-    <div class="metric"><div class="metric-label">Risco alto</div><div class="metric-value" id="tp-m-risk">—</div></div>
+    <div class="metric metric-c1"><div class="metric-label">Parceiros</div><div class="metric-value" id="tp-m-total">—</div></div>
+    <div class="metric metric-c2"><div class="metric-label">Contratos ativos</div><div class="metric-value" id="tp-m-ativos">—</div></div>
+    <div class="metric metric-red"><div class="metric-label">Vencendo 30d</div><div class="metric-value" id="tp-m-venc">—</div></div>
+    <div class="metric metric-c4"><div class="metric-label">SLA em risco</div><div class="metric-value" id="tp-m-sla">—</div></div>
+    <div class="metric metric-red"><div class="metric-label">Risco alto</div><div class="metric-value" id="tp-m-risk">—</div></div>
   </div>
   <div class="alert-bar" id="tp-alert"><i class="ti ti-calendar-exclamation" style="flex-shrink:0"></i><span>Contratos vencendo em 30 dias:</span><span id="tp-alert-names"></span></div>
   <div class="filter-bar">
@@ -490,12 +497,12 @@ input[type=range]::-moz-range-progress{background:var(--thumb-color,#3b82f6);hei
     </div>
   </div>
   <div class="metrics">
-    <div class="metric"><div class="metric-label">Total</div><div class="metric-value" id="rr-m-total">—</div></div>
-    <div class="metric"><div class="metric-label">Abertos</div><div class="metric-value" id="rr-m-open">—</div></div>
-    <div class="metric"><div class="metric-label">Crítico</div><div class="metric-value" id="rr-m-crit">—</div></div>
-    <div class="metric"><div class="metric-label">Alto</div><div class="metric-value" id="rr-m-alto">—</div></div>
-    <div class="metric"><div class="metric-label">Em mitigação</div><div class="metric-value" id="rr-m-mit">—</div></div>
-    <div class="metric"><div class="metric-label">Encerrados</div><div class="metric-value" id="rr-m-closed">—</div></div>
+    <div class="metric metric-c1"><div class="metric-label">Total</div><div class="metric-value" id="rr-m-total">—</div></div>
+    <div class="metric metric-c3"><div class="metric-label">Abertos</div><div class="metric-value" id="rr-m-open">—</div></div>
+    <div class="metric metric-red"><div class="metric-label">Crítico</div><div class="metric-value" id="rr-m-crit">—</div></div>
+    <div class="metric metric-c4"><div class="metric-label">Alto</div><div class="metric-value" id="rr-m-alto">—</div></div>
+    <div class="metric metric-c6"><div class="metric-label">Em mitigação</div><div class="metric-value" id="rr-m-mit">—</div></div>
+    <div class="metric metric-c2"><div class="metric-label">Encerrados</div><div class="metric-value" id="rr-m-closed">—</div></div>
   </div>
   <div class="alert-bar" id="ro-alert"><i class="ti ti-alert-triangle" style="flex-shrink:0"></i><span>Riscos críticos em aberto:</span><span id="ro-alert-names"></span></div>
   <div class="filter-bar">
@@ -504,6 +511,12 @@ input[type=range]::-moz-range-progress{background:var(--thumb-color,#3b82f6);hei
     <select class="filter-select" id="ro-risk-filter-status" onchange="renderROSub('risks')"><option value="">Todos os status</option><option value="aberto">Aberto</option><option value="em mitigação">Em mitigação</option><option value="monitorado">Monitorado</option><option value="encerrado">Encerrado</option></select>
   </div>
   <div id="ro-risks-list"></div>
+  <div style="margin-top:2rem">
+    <div style="font-size:14px;font-weight:500;margin-bottom:1rem">Matriz de Risco</div>
+    <div id="ro-risk-matrix" style="display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:4px;max-width:520px">
+      <!-- renderizada via JS -->
+    </div>
+  </div>
 </div>
 </div>
 
@@ -517,12 +530,12 @@ input[type=range]::-moz-range-progress{background:var(--thumb-color,#3b82f6);hei
     </div>
   </div>
   <div class="metrics">
-    <div class="metric"><div class="metric-label">Total</div><div class="metric-value" id="ri-m-total">—</div></div>
-    <div class="metric"><div class="metric-label">Abertos</div><div class="metric-value" id="ri-m-open">—</div></div>
-    <div class="metric"><div class="metric-label">Crítico</div><div class="metric-value" id="ri-m-crit">—</div></div>
-    <div class="metric"><div class="metric-label">Alto</div><div class="metric-value" id="ri-m-alto">—</div></div>
-    <div class="metric"><div class="metric-label">Em resolução</div><div class="metric-value" id="ri-m-resolv">—</div></div>
-    <div class="metric"><div class="metric-label">Resolvidos</div><div class="metric-value" id="ri-m-closed">—</div></div>
+    <div class="metric metric-c1"><div class="metric-label">Total</div><div class="metric-value" id="ri-m-total">—</div></div>
+    <div class="metric metric-c3"><div class="metric-label">Abertos</div><div class="metric-value" id="ri-m-open">—</div></div>
+    <div class="metric metric-red"><div class="metric-label">Crítico</div><div class="metric-value" id="ri-m-crit">—</div></div>
+    <div class="metric metric-c4"><div class="metric-label">Alto</div><div class="metric-value" id="ri-m-alto">—</div></div>
+    <div class="metric metric-c6"><div class="metric-label">Em resolução</div><div class="metric-value" id="ri-m-resolv">—</div></div>
+    <div class="metric metric-c2"><div class="metric-label">Resolvidos</div><div class="metric-value" id="ri-m-closed">—</div></div>
   </div>
   <div class="filter-bar">
     <div class="search-wrap"><i class="ti ti-search"></i><input type="text" id="ro-inc-search" placeholder="Buscar incidente..." oninput="renderROSub('incidents')"/></div>
@@ -530,6 +543,16 @@ input[type=range]::-moz-range-progress{background:var(--thumb-color,#3b82f6);hei
     <select class="filter-select" id="ro-inc-filter-status" onchange="renderROSub('incidents')"><option value="">Todos os status</option><option value="aberto">Aberto</option><option value="em resolução">Em resolução</option><option value="resolvido">Resolvido</option></select>
   </div>
   <div id="ro-incidents-list"></div>
+  <div style="margin-top:2rem;display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;max-width:600px">
+    <div>
+      <div style="font-size:13px;font-weight:500;margin-bottom:8px;color:var(--text2)">Por severidade</div>
+      <div style="position:relative;height:200px"><canvas id="inc-donut-sev"></canvas></div>
+    </div>
+    <div>
+      <div style="font-size:13px;font-weight:500;margin-bottom:8px;color:var(--text2)">Por status</div>
+      <div style="position:relative;height:200px"><canvas id="inc-donut-status"></canvas></div>
+    </div>
+  </div>
 </div>
 </div>
 
@@ -543,12 +566,12 @@ input[type=range]::-moz-range-progress{background:var(--thumb-color,#3b82f6);hei
     </div>
   </div>
   <div class="metrics">
-    <div class="metric"><div class="metric-label">Total</div><div class="metric-value" id="rd-m-total">—</div></div>
-    <div class="metric"><div class="metric-label">Abertos</div><div class="metric-value" id="rd-m-open">—</div></div>
-    <div class="metric"><div class="metric-label">Crítico</div><div class="metric-value" id="rd-m-crit">—</div></div>
-    <div class="metric"><div class="metric-label">Alto</div><div class="metric-value" id="rd-m-alto">—</div></div>
-    <div class="metric"><div class="metric-label">Em resolução</div><div class="metric-value" id="rd-m-resolv">—</div></div>
-    <div class="metric"><div class="metric-label">Resolvidos</div><div class="metric-value" id="rd-m-closed">—</div></div>
+    <div class="metric metric-c1"><div class="metric-label">Total</div><div class="metric-value" id="rd-m-total">—</div></div>
+    <div class="metric metric-c3"><div class="metric-label">Abertos</div><div class="metric-value" id="rd-m-open">—</div></div>
+    <div class="metric metric-red"><div class="metric-label">Crítico</div><div class="metric-value" id="rd-m-crit">—</div></div>
+    <div class="metric metric-c4"><div class="metric-label">Alto</div><div class="metric-value" id="rd-m-alto">—</div></div>
+    <div class="metric metric-c6"><div class="metric-label">Em resolução</div><div class="metric-value" id="rd-m-resolv">—</div></div>
+    <div class="metric metric-c2"><div class="metric-label">Resolvidos</div><div class="metric-value" id="rd-m-closed">—</div></div>
   </div>
   <div class="filter-bar">
     <div class="search-wrap"><i class="ti ti-search"></i><input type="text" id="ro-desenq-search" placeholder="Buscar desenquadramento..." oninput="renderROSub('desenq')"/></div>
@@ -556,6 +579,16 @@ input[type=range]::-moz-range-progress{background:var(--thumb-color,#3b82f6);hei
     <select class="filter-select" id="ro-desenq-filter-status" onchange="renderROSub('desenq')"><option value="">Todos os status</option><option value="aberto">Aberto</option><option value="em resolução">Em resolução</option><option value="resolvido">Resolvido</option></select>
   </div>
   <div id="ro-desenq-list"></div>
+  <div style="margin-top:2rem;display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;max-width:600px">
+    <div>
+      <div style="font-size:13px;font-weight:500;margin-bottom:8px;color:var(--text2)">Por severidade</div>
+      <div style="position:relative;height:200px"><canvas id="desenq-donut-sev"></canvas></div>
+    </div>
+    <div>
+      <div style="font-size:13px;font-weight:500;margin-bottom:8px;color:var(--text2)">Por status</div>
+      <div style="position:relative;height:200px"><canvas id="desenq-donut-status"></canvas></div>
+    </div>
+  </div>
 </div>
 </div>
 
@@ -569,16 +602,20 @@ input[type=range]::-moz-range-progress{background:var(--thumb-color,#3b82f6);hei
     </div>
   </div>
   <div class="metrics">
-    <div class="metric"><div class="metric-label">Total</div><div class="metric-value" id="ind-m-total">—</div></div>
-    <div class="metric"><div class="metric-label">OK</div><div class="metric-value" id="ind-m-ok">—</div></div>
-    <div class="metric"><div class="metric-label">Atenção</div><div class="metric-value" id="ind-m-atenc">—</div></div>
-    <div class="metric"><div class="metric-label">Crítico</div><div class="metric-value" id="ind-m-crit">—</div></div>
+    <div class="metric metric-c1"><div class="metric-label">Total</div><div class="metric-value" id="ind-m-total">—</div></div>
+    <div class="metric metric-c2"><div class="metric-label">OK</div><div class="metric-value" id="ind-m-ok">—</div></div>
+    <div class="metric metric-c6"><div class="metric-label">Atenção</div><div class="metric-value" id="ind-m-atenc">—</div></div>
+    <div class="metric metric-red"><div class="metric-label">Crítico</div><div class="metric-value" id="ind-m-crit">—</div></div>
   </div>
   <div class="filter-bar">
     <div class="search-wrap"><i class="ti ti-search"></i><input type="text" id="ro-ind-search" placeholder="Buscar indicador..." oninput="renderROSub('indicators')"/></div>
     <select class="filter-select" id="ro-ind-filter-status" onchange="renderROSub('indicators')"><option value="">Todos os status</option><option value="ok">OK</option><option value="atenção">Atenção</option><option value="crítico">Crítico</option></select>
   </div>
   <div id="ro-indicators-list"></div>
+  <div style="margin-top:2rem">
+    <div style="font-size:13px;font-weight:500;margin-bottom:8px;color:var(--text2)">Valor atual vs Meta</div>
+    <div style="position:relative;height:260px"><canvas id="ind-bar-chart"></canvas></div>
+  </div>
 </div>
 </div>
 </div><!-- /main -->
@@ -1322,10 +1359,16 @@ const OSTATUS={encerrado:{bg:'#f3f4f6',text:'#6b7280'},'em mitigação':{bg:'#ff
 const IND_STATUS={ok:{bg:'#f0fdf4',text:'#15803d'},'atenção':{bg:'#fffbeb',text:'#92400e'},crítico:{bg:'#fef2f2',text:'#b91c1c'}};
 
 function renderROSub(sub){
-  if(sub==='risks'||sub===undefined) _renderROrisks();
-  if(sub==='incidents'||sub===undefined) _renderROIncidents();
-  if(sub==='desenq'||sub===undefined) _renderRODesenq();
-  if(sub==='indicators'||sub===undefined) _renderROIndicators();
+  if(sub==='risks'||sub===undefined){_renderROrisks();setTimeout(()=>_renderRiskMatrix(),50);}
+  if(sub==='incidents'||sub===undefined){_renderROIncidents();setTimeout(()=>{
+    _renderDonut('inc-donut-sev',roIncidents,'severity',['crítico','alto','médio','baixo'],['#fdf2f8','#fef2f2','#fff7ed','#f0fdf4'],['#e879f9','#f87171','#fb923c','#4ade80'],incDonutSev,c=>{incDonutSev=c;});
+    _renderDonut('inc-donut-status',roIncidents,'status',['aberto','em resolução','resolvido'],['#fef2f2','#fff7ed','#f0fdf4'],['#f87171','#fb923c','#4ade80'],incDonutStatus,c=>{incDonutStatus=c;});
+  },50);}
+  if(sub==='desenq'||sub===undefined){_renderRODesenq();setTimeout(()=>{
+    _renderDonut('desenq-donut-sev',roDesenqs,'severity',['crítico','alto','médio','baixo'],['#fdf2f8','#fef2f2','#fff7ed','#f0fdf4'],['#e879f9','#f87171','#fb923c','#4ade80'],desenqDonutSev,c=>{desenqDonutSev=c;});
+    _renderDonut('desenq-donut-status',roDesenqs,'status',['aberto','em resolução','resolvido'],['#fef2f2','#fff7ed','#f0fdf4'],['#f87171','#fb923c','#4ade80'],desenqDonutStatus,c=>{desenqDonutStatus=c;});
+  },50);}
+  if(sub==='indicators'||sub===undefined){_renderROIndicators();setTimeout(()=>_renderIndBar(),50);}
 }
 
 function _renderROrisks(){
@@ -1569,6 +1612,107 @@ function exportROSubPDF(sub){
 function exportROPDF(){exportROSubPDF('risks');}
 
 
+
+// ══════════════════════════════════════════════════════════
+//  GRÁFICOS RO
+// ══════════════════════════════════════════════════════════
+let incDonutSev=null,incDonutStatus=null,desenqDonutSev=null,desenqDonutStatus=null,indBarChart=null;
+
+const DONUT_SEV_COLORS=['#fdf2f8','#fef2f2','#fff7ed','#f0fdf4'];
+const DONUT_SEV_BORDER=['#e879f9','#f87171','#fb923c','#4ade80'];
+const DONUT_STATUS_COLORS=['#fef2f2','#fff7ed','#f0fdf4','#eff6ff'];
+const DONUT_STATUS_BORDER=['#f87171','#fb923c','#4ade80','#60a5fa'];
+
+function renderROCharts(){
+  // Matriz de risco
+  _renderRiskMatrix();
+  // Donuts incidentes
+  _renderDonut('inc-donut-sev', roIncidents, 'severity', ['crítico','alto','médio','baixo'],
+    DONUT_SEV_COLORS, DONUT_SEV_BORDER, incDonutSev, c=>{incDonutSev=c;});
+  _renderDonut('inc-donut-status', roIncidents, 'status', ['aberto','em resolução','resolvido'],
+    ['#fef2f2','#fff7ed','#f0fdf4'], ['#f87171','#fb923c','#4ade80'], incDonutStatus, c=>{incDonutStatus=c;});
+  // Donuts desenquadramentos
+  _renderDonut('desenq-donut-sev', roDesenqs, 'severity', ['crítico','alto','médio','baixo'],
+    DONUT_SEV_COLORS, DONUT_SEV_BORDER, desenqDonutSev, c=>{desenqDonutSev=c;});
+  _renderDonut('desenq-donut-status', roDesenqs, 'status', ['aberto','em resolução','resolvido'],
+    ['#fef2f2','#fff7ed','#f0fdf4'], ['#f87171','#fb923c','#4ade80'], desenqDonutStatus, c=>{desenqDonutStatus=c;});
+  // Barras indicadores
+  _renderIndBar();
+}
+
+function _renderRiskMatrix(){
+  const el=document.getElementById('ro-risk-matrix');
+  if(!el)return;
+  const probs=['alta','média','baixa'];
+  const impacts=['crítico','alto','médio','baixo'];
+  // cores da matriz (prob × impact)
+  const matColors={
+    'alta-crítico':'#fecdd3','alta-alto':'#fed7aa','alta-médio':'#fef08a','alta-baixo':'#d9f99d',
+    'média-crítico':'#fed7aa','média-alto':'#fef08a','média-médio':'#d9f99d','média-baixo':'#bbf7d0',
+    'baixa-crítico':'#fef08a','baixa-alto':'#d9f99d','baixa-médio':'#bbf7d0','baixa-baixo':'#bfdbfe',
+  };
+  const matText={
+    'alta-crítico':'#9f1239','alta-alto':'#9a3412','alta-médio':'#713f12','alta-baixo':'#365314',
+    'média-crítico':'#9a3412','média-alto':'#713f12','média-médio':'#365314','média-baixo':'#14532d',
+    'baixa-crítico':'#713f12','baixa-alto':'#365314','baixa-médio':'#14532d','baixa-baixo':'#1e3a8a',
+  };
+  let html='<div style="background:transparent"></div>';
+  impacts.forEach(imp=>{html+=`<div style="font-size:10px;font-weight:500;color:var(--text2);text-align:center;padding:4px">${imp}</div>`;});
+  probs.forEach(prob=>{
+    html+=`<div style="font-size:10px;font-weight:500;color:var(--text2);padding:4px;display:flex;align-items:center">${prob}</div>`;
+    impacts.forEach(imp=>{
+      const key=prob+'-'+imp;
+      const count=roRisks.filter(r=>(r.prob||r.probability||'média')===prob&&(r.impact||r.severity||'médio')===imp).length;
+      const bg=matColors[key]||'#f3f4f6',tx=matText[key]||'#374151';
+      html+=`<div style="background:${bg};border-radius:8px;padding:8px 4px;text-align:center;cursor:default;min-height:52px;display:flex;flex-direction:column;align-items:center;justify-content:center"><div style="font-size:18px;font-weight:500;color:${tx}">${count||''}</div><div style="font-size:9px;color:${tx};opacity:.7">${count?'risco':'—'}</div></div>`;
+    });
+  });
+  el.innerHTML=html;
+}
+
+function _renderDonut(canvasId, data, field, labels, bgColors, borderColors, chartRef, setter){
+  const canvas=document.getElementById(canvasId);
+  if(!canvas)return;
+  if(chartRef)chartRef.destroy();
+  const counts=labels.map(l=>data.filter(x=>x[field]===l).length);
+  if(counts.every(c=>c===0)){
+    canvas.getContext('2d').clearRect(0,0,canvas.width,canvas.height);
+    setter(null);return;
+  }
+  const chart=new Chart(canvas.getContext('2d'),{
+    type:'doughnut',
+    data:{labels,datasets:[{data:counts,backgroundColor:bgColors,borderColor:borderColors,borderWidth:2,hoverOffset:6}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:11},boxWidth:14,padding:10}},tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${ctx.parsed}`}}},cutout:'62%'}
+  });
+  setter(chart);
+}
+
+function _renderIndBar(){
+  const canvas=document.getElementById('ind-bar-chart');
+  if(!canvas)return;
+  if(indBarChart)indBarChart.destroy();
+  const inds=roIndicators.filter(i=>(i.name||i.title)&&i.current_value);
+  if(!inds.length){indBarChart=null;return;}
+  const BAR_COLORS=['#bfdbfe','#bbf7d0','#fde68a','#e9d5ff','#fed7aa','#99f6e4','#fca5a5','#d9f99d'];
+  const BAR_BORDER=['#60a5fa','#4ade80','#fbbf24','#c084fc','#fb923c','#34d399','#f87171','#86efac'];
+  const labels=inds.map(i=>i.name||i.title||'');
+  const current=inds.map(i=>parseFloat(i.current_value)||0);
+  const target=inds.map(i=>parseFloat(i.target)||null);
+  const datasets=[{
+    label:'Valor atual',
+    data:current,
+    backgroundColor:inds.map((_,i)=>BAR_COLORS[i%BAR_COLORS.length]),
+    borderColor:inds.map((_,i)=>BAR_BORDER[i%BAR_BORDER.length]),
+    borderWidth:2,borderRadius:6,
+  }];
+  if(target.some(t=>t!==null)){
+    datasets.push({label:'Meta',data:target,backgroundColor:'transparent',borderColor:'#94a3b8',borderWidth:2,type:'line',pointRadius:5,pointBackgroundColor:'#94a3b8'});
+  }
+  indBarChart=new Chart(canvas.getContext('2d'),{
+    type:'bar',data:{labels,datasets},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:11},boxWidth:14}}},scales:{y:{beginAtZero:true,grid:{color:'rgba(0,0,0,0.05)'},ticks:{color:'#9ca3af',font:{size:11}}},x:{ticks:{color:'#6b7280',font:{size:11}},grid:{display:false}}}}
+  });
+}
 
 // ══════════════════════════════════════════════════════════
 //  LOAD ALL
