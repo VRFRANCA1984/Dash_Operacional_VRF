@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -930,12 +931,12 @@ async function removePerspectiva(id,pid){
 function renderAtividades(p){
   const el=document.getElementById('dp-atividades'),ativs=p._atividades||[];
   if(!ativs.length){el.innerHTML='<div style="font-size:13px;color:var(--text3);margin-bottom:1rem">Nenhuma atividade.</div>';return;}
-  el.innerHTML=ativs.map(a=>{const st=ACT_STYLE[a.type]||ACT_STYLE.responsabilidade,ss=STATUS_STYLE[a.status]||STATUS_STYLE.ativo;return`<div class="act-item"><div class="act-icon" style="background:${st.bg};color:${st.text}"><i class="ti ${st.icon}"></i></div><div class="act-body"><div class="act-title">${a.title}<span class="act-status" style="background:${ss.bg};color:${ss.text}">${a.status}</span></div><div class="act-meta">${a.type}${a.description?' · '+a.description:''}</div></div><button onclick="removeAtividade(${a.id},${p.id})" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:13px;flex-shrink:0"><i class="ti ti-trash"></i></button></div>`;}).join('');
+  el.innerHTML=ativs.map(a=>{const st=ACT_STYLE[a.type]||ACT_STYLE.responsabilidade,ss=STATUS_STYLE[a.status]||STATUS_STYLE.ativo;return`<div class="act-item"><div class="act-icon" style="background:${st.bg};color:${st.text}"><i class="ti ${st.icon}"></i></div><div class="act-body"><div class="act-title">${a.title}<span class="act-status" style="background:${ss.bg};color:${ss.text}">${a.status}</span></div><div class="act-meta">${a.type}${(a.descricao||a.description)?' · '+(a.descricao||a.description):''}</div></div><button onclick="removeAtividade(${a.id},${p.id})" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:13px;flex-shrink:0"><i class="ti ti-trash"></i></button></div>`;}).join('');
 }
 async function addAtividade(){
   if(!gpActiveId)return;const title=document.getElementById('a-title').value.trim();if(!title)return;
   const type=document.getElementById('a-type').value,status=document.getElementById('a-status').value,description=document.getElementById('a-desc').value.trim();
-  try{const r=await post('atividades',{person_id:gpActiveId,title,type,status,description});const p=people.find(x=>x.id===gpActiveId);p._atividades.push(r[0]);document.getElementById('a-title').value='';document.getElementById('a-desc').value='';renderAtividades(p);showToast('Atividade adicionada');}catch(e){showToast('Erro',true);}
+  try{const r=await post('atividades',{person_id:gpActiveId,title,type,status,descricao:description});const p=people.find(x=>x.id===gpActiveId);p._atividades.push(r[0]);document.getElementById('a-title').value='';document.getElementById('a-desc').value='';renderAtividades(p);showToast('Atividade adicionada');}catch(e){showToast('Erro',true);}
 }
 async function removeAtividade(id,pid){
   try{await del('atividades',`?id=eq.${id}`);const p=people.find(x=>x.id===pid);p._atividades=p._atividades.filter(x=>x.id!==id);renderAtividades(p);}catch(e){showToast('Erro',true);}
@@ -947,7 +948,7 @@ function renderPDI(p){
   el.innerHTML=pdis.map(pdi=>{
     const ms=pdi._milestones||[],done=ms.filter(m=>m.done).length,pct=ms.length?Math.round(done/ms.length*100):0;
     const imp=IMPACT_STYLE[pdi.impact]||IMPACT_STYLE['médio'];
-    return`<div class="pdi-card"><div class="pdi-header"><div class="pdi-title">${pdi.title}</div><div style="display:flex;gap:6px;align-items:center"><span class="pdi-impact" style="background:${imp.bg};color:${imp.text}">${pdi.impact}</span><button onclick="addMilestoneModal(${p.id},${pdi.id})" class="btn btn-sm" style="padding:3px 8px;font-size:11px"><i class="ti ti-plus"></i>Marco</button><button onclick="removePDI(${pdi.id},${p.id})" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:13px"><i class="ti ti-trash"></i></button></div></div><div class="pdi-desc">${pdi.description||''}</div><div class="pdi-milestones">${ms.map(m=>`<div class="pdi-ms"><div class="pdi-ms-check ${m.done?'done':''}" onclick="toggleMilestone(${m.id},${pdi.id},${p.id})">${m.done?'<i class="ti ti-check"></i>':''}</div><span class="pdi-ms-label ${m.done?'done':''}">${m.text}</span>${m.due_date?`<span class="pdi-ms-date">${fmtDate(m.due_date)}</span>`:''}</div>`).join('')}</div><div class="pdi-progress"><div class="pdi-progress-bar" style="width:${pct}%"></div></div><div style="font-size:11px;color:var(--text3);margin-top:4px">${done}/${ms.length} marcos · ${pct}%</div></div>`;
+    return`<div class="pdi-card"><div class="pdi-header"><div class="pdi-title">${pdi.title}</div><div style="display:flex;gap:6px;align-items:center"><span class="pdi-impact" style="background:${imp.bg};color:${imp.text}">${pdi.impact}</span><button onclick="addMilestoneModal(${p.id},${pdi.id})" class="btn btn-sm" style="padding:3px 8px;font-size:11px"><i class="ti ti-plus"></i>Marco</button><button onclick="removePDI(${pdi.id},${p.id})" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:13px"><i class="ti ti-trash"></i></button></div></div><div class="pdi-desc">${pdi.descricao||pdi.description||''}</div><div class="pdi-milestones">${ms.map(m=>`<div class="pdi-ms"><div class="pdi-ms-check ${m.done?'done':''}" onclick="toggleMilestone(${m.id},${pdi.id},${p.id})">${m.done?'<i class="ti ti-check"></i>':''}</div><span class="pdi-ms-label ${m.done?'done':''}">${m.text}</span>${m.due_date?`<span class="pdi-ms-date">${fmtDate(m.due_date)}</span>`:''}</div>`).join('')}</div><div class="pdi-progress"><div class="pdi-progress-bar" style="width:${pct}%"></div></div><div style="font-size:11px;color:var(--text3);margin-top:4px">${done}/${ms.length} marcos · ${pct}%</div></div>`;
   }).join('');
 }
 async function addPDI(){
@@ -955,7 +956,7 @@ async function addPDI(){
   const impact=document.getElementById('pdi-impact').value,deadline=document.getElementById('pdi-deadline').value||null,description=document.getElementById('pdi-desc').value.trim();
   const msLines=document.getElementById('pdi-ms').value.split('\n').map(l=>l.trim()).filter(Boolean);
   try{
-    const r=await post('pdis',{person_id:gpActiveId,title,impact,deadline,description});
+    const r=await post('pdis',{person_id:gpActiveId,title,impact,deadline,descricao:description});
     const newPdi=r[0];newPdi._milestones=[];
     if(msLines.length){const msData=msLines.map(text=>({pdi_id:newPdi.id,text,done:false}));const mr=await post('milestones',msData);newPdi._milestones=mr||[];}
     const p=people.find(x=>x.id===gpActiveId);p._pdis.push(newPdi);
@@ -971,7 +972,7 @@ function closeMsModal(){document.getElementById('ms-modal').classList.remove('vi
 async function saveMilestone(){
   const text=document.getElementById('ms-text').value.trim();if(!text)return;
   const due_date=document.getElementById('ms-date').value||null;
-  try{const r=await post('milestones',{pdi_id:_msTarget.pdi_id,text,done:false,due_date});const p=people.find(x=>x.id===_msTarget.pid);const pdi=p._pdis.find(x=>x.id===_msTarget.pdi_id);pdi._milestones.push(r[0]);closeMsModal();renderPDI(p);showToast('Marco adicionado');}catch(e){showToast('Erro',true);}
+  try{const r=await post('milestones',{pdi_id:_msTarget.pdi_id,text,done:false,date:due_date});const p=people.find(x=>x.id===_msTarget.pid);const pdi=p._pdis.find(x=>x.id===_msTarget.pdi_id);pdi._milestones.push(r[0]);closeMsModal();renderPDI(p);showToast('Marco adicionado');}catch(e){showToast('Erro',true);}
 }
 async function toggleMilestone(msId,pdiId,pid){
   const p=people.find(x=>x.id===pid);const pdi=p._pdis.find(x=>x.id===pdiId);const ms=pdi._milestones.find(x=>x.id===msId);
