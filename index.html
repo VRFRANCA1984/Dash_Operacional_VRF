@@ -1564,24 +1564,25 @@ function _renderROIndicators(){
   });
   const el=document.getElementById('ro-indicators-list');
   if(!list.length){el.innerHTML='<div style="font-size:13px;color:var(--text3);padding:1rem 0">Nenhum indicador.</div>';return;}
-  const STATUS_BAR={ok:{bar:'#1D9E75',bg:'#EAF3DE',text:'#27500A'},'atenção':{bar:'#EF9F27',bg:'#FAEEDA',text:'#633806'},crítico:{bar:'#E24B4A',bg:'#FCEBEB',text:'#791F1F'}};
-  el.innerHTML='<div class="ind-card-grid">'+list.map(i=>{
+  const SB={ok:{bar:'#1D9E75',bg:'#EAF3DE',text:'#27500A'},'atenção':{bar:'#EF9F27',bg:'#FAEEDA',text:'#633806'},crítico:{bar:'#E24B4A',bg:'#FCEBEB',text:'#791F1F'}};
+  const cards=list.map(i=>{
     const label=i.name||i.title||'';
-    const st=STATUS_BAR[i.status]||STATUS_BAR.ok;
-    const cur=parseFloat(i.current_value);
-    const tgt=parseFloat(i.target);
+    const st=SB[i.status]||SB.ok;
+    const cur=parseFloat(i.current_value),tgt=parseFloat(i.target);
     let pct=70;
     if(!isNaN(cur)&&!isNaN(tgt)&&tgt>0){
-      const isLower=(i.target||'').includes('<');
-      pct=isLower?Math.min(100,Math.max(0,(tgt/cur)*100)):Math.min(100,Math.max(0,(cur/tgt)*100));
+      const lower=(i.target||'').includes('<');
+      pct=lower?Math.min(100,Math.max(0,(tgt/cur)*100)):Math.min(100,Math.max(0,(cur/tgt)*100));
     }
-    return '<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.25rem">'+
+    const div=document.createElement('div');
+    div.style.cssText='background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.25rem';
+    div.innerHTML=
       '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px">'+
         '<span style="font-size:13px;font-weight:500;color:var(--text);flex:1;line-height:1.4">'+label+'</span>'+
         '<div style="display:flex;gap:4px;align-items:center;flex-shrink:0">'+
           '<span style="font-size:11px;padding:2px 8px;border-radius:20px;background:'+st.bg+';color:'+st.text+';white-space:nowrap">'+i.status+'</span>'+
-          '<button onclick="openROModal('indicator',''+i.id+'')" style="background:none;border:none;cursor:pointer;color:var(--text2);font-size:13px;padding:2px"><i class="ti ti-pencil"></i></button>'+
-          '<button onclick="delROItem('indicator',''+i.id+'')" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:13px;padding:2px"><i class="ti ti-trash"></i></button>'+
+          '<button class="btn-ind-edit" style="background:none;border:none;cursor:pointer;color:var(--text2);font-size:13px;padding:2px"><i class="ti ti-pencil"></i></button>'+
+          '<button class="btn-ind-del" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:13px;padding:2px"><i class="ti ti-trash"></i></button>'+
         '</div>'+
       '</div>'+
       '<div style="display:flex;align-items:baseline;gap:5px;margin-bottom:4px">'+
@@ -1589,22 +1590,20 @@ function _renderROIndicators(){
         '<span style="font-size:12px;color:var(--text2)">'+(i.unit||'')+'</span>'+
       '</div>'+
       '<div style="font-size:11px;color:var(--text2);margin-bottom:8px">Meta: '+(i.target||'—')+(i.responsible?' · '+i.responsible:'')+'</div>'+
-      '<div style="height:6px;background:#e5e7eb;border-radius:4px;overflow:hidden;margin-bottom:8px">'+
-        '<div style="height:100%;border-radius:4px;background:'+st.bar+';width:'+pct.toFixed(0)+'%;transition:width .4s"></div>'+
+      '<div style="height:6px;background:#e5e7eb;border-radius:4px;overflow:hidden;margin-bottom:'+(i.description?'8':'0')+'px">'+
+        '<div style="height:100%;border-radius:4px;background:'+st.bar+';width:'+pct.toFixed(0)+'%"></div>'+
       '</div>'+
-      (i.description?'<div style="font-size:11px;color:var(--text2);line-height:1.5;border-top:1px solid var(--border);padding-top:8px">'+i.description+'</div>':'')+
-    '</div>';
-  }).join('')+'</div>';
+      (i.description?'<div style="font-size:11px;color:var(--text2);line-height:1.5;border-top:1px solid var(--border);padding-top:8px">'+i.description+'</div>':'');
+    div.querySelector('.btn-ind-edit').addEventListener('click',()=>openROModal('indicator',i.id));
+    div.querySelector('.btn-ind-del').addEventListener('click',()=>delROItem('indicator',i.id));
+    return div;
+  });
+  el.innerHTML='';
+  const grid=document.createElement('div');
+  grid.style.cssText='display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px';
+  cards.forEach(c=>grid.appendChild(c));
+  el.appendChild(grid);
 }
-
-let _roEditType=null, _roEditId=null;
-const RO_LABELS={risk:'Risco',incident:'Incidente',desenq:'Desenquadramento',indicator:'Indicador'};
-const RO_FORMS={
-  risk:`<div class="form-grid"><div class="form-field form-field-full"><label>Título</label><input type="text" id="rof-title" placeholder="Nome do risco"/></div><div class="form-field"><label>Severidade</label><select id="rof-sev"><option value="crítico">Crítico</option><option value="alto">Alto</option><option value="médio">Médio</option><option value="baixo">Baixo</option></select></div><div class="form-field"><label>Probabilidade</label><select id="rof-prob"><option value="alta">Alta</option><option value="média">Média</option><option value="baixa">Baixa</option></select></div><div class="form-field"><label>Status</label><select id="rof-status"><option value="aberto">Aberto</option><option value="em mitigação">Em mitigação</option><option value="monitorado">Monitorado</option><option value="encerrado">Encerrado</option></select></div><div class="form-field"><label>Responsável</label><input type="text" id="rof-responsible"/></div><div class="form-field form-field-full"><label>Descrição</label><textarea id="rof-desc" rows="2"></textarea></div></div>`,
-  incident:`<div class="form-grid"><div class="form-field form-field-full"><label>Título</label><input type="text" id="rof-title"/></div><div class="form-field"><label>Data</label><input type="date" id="rof-date"/></div><div class="form-field"><label>Severidade</label><select id="rof-sev"><option value="crítico">Crítico</option><option value="alto">Alto</option><option value="médio">Médio</option><option value="baixo">Baixo</option></select></div><div class="form-field"><label>Status</label><select id="rof-status"><option value="aberto">Aberto</option><option value="em resolução">Em resolução</option><option value="resolvido">Resolvido</option></select></div><div class="form-field"><label>Responsável</label><input type="text" id="rof-responsible"/></div><div class="form-field form-field-full"><label>Descrição</label><textarea id="rof-desc" rows="2"></textarea></div><div class="form-field form-field-full"><label>Resolução / ação tomada</label><textarea id="rof-resolution" rows="2"></textarea></div></div>`,
-  desenq:`<div class="form-grid"><div class="form-field form-field-full"><label>Título / norma violada</label><input type="text" id="rof-title"/></div><div class="form-field"><label>Data</label><input type="date" id="rof-date"/></div><div class="form-field"><label>Severidade</label><select id="rof-sev"><option value="crítico">Crítico</option><option value="alto">Alto</option><option value="médio">Médio</option><option value="baixo">Baixo</option></select></div><div class="form-field"><label>Status</label><select id="rof-status"><option value="aberto">Aberto</option><option value="em resolução">Em resolução</option><option value="resolvido">Resolvido</option></select></div><div class="form-field"><label>Responsável</label><input type="text" id="rof-responsible"/></div><div class="form-field form-field-full"><label>Descrição</label><textarea id="rof-desc" rows="2"></textarea></div><div class="form-field form-field-full"><label>Plano de regularização</label><textarea id="rof-resolution" rows="2"></textarea></div></div>`,
-  indicator:`<div class="form-grid"><div class="form-field form-field-full"><label>Nome do indicador</label><input type="text" id="rof-title"/></div><div class="form-field"><label>Meta</label><input type="text" id="rof-target"/></div><div class="form-field"><label>Valor atual</label><input type="text" id="rof-current"/></div><div class="form-field"><label>Unidade</label><input type="text" id="rof-unit" placeholder="%, qtd, R$..."/></div><div class="form-field"><label>Status</label><select id="rof-status"><option value="ok">OK</option><option value="atenção">Atenção</option><option value="crítico">Crítico</option></select></div><div class="form-field"><label>Responsável</label><input type="text" id="rof-responsible"/></div><div class="form-field form-field-full"><label>Descrição</label><textarea id="rof-desc" rows="2"></textarea></div></div>`
-};
 function openROModal(type,id=null){
   _roEditType=type;_roEditId=id;
   document.getElementById('ro-modal-title').textContent=(id?'Editar ':'Novo ')+RO_LABELS[type];
