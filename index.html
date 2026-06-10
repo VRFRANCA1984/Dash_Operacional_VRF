@@ -1798,32 +1798,45 @@ function _renderDonut(canvasId, data, field, labels, bgColors, borderColors, cha
 // ══════════════════════════════════════════════════════════
 async function loadAll(){
   loading(true);
+  const TABLES=[
+    ['people','?order=id.asc'],
+    ['competencies','?order=id.asc'],
+    ['sessions','?order=date.asc'],
+    ['bottlenecks','?order=id.asc'],
+    ['comments','?order=id.asc'],
+    ['perspectiva','?order=id.asc'],
+    ['atividades','?order=id.asc'],
+    ['pdis','?order=id.asc'],
+    ['milestones','?order=id.asc'],
+    ['feedback360','?order=id.asc'],
+    ['cargo_historico','?order=date.asc'],
+    ['third_parties','?order=id.asc'],
+    ['tp_competencies','?order=id.asc'],
+    ['tp_contacts','?order=id.asc'],
+    ['tp_slas','?order=id.asc'],
+    ['tp_evaluations','?order=id.asc'],
+    ['tp_risks','?order=id.asc'],
+    ['risks','?order=id.asc'],
+    ['risk_incidents','?order=date.asc'],
+    ['risk_desenquadramentos','?order=date.asc'],
+    ['risk_indicators','?order=id.asc'],
+  ];
   try{
+    const results=await Promise.all(TABLES.map(([t,q])=>get(t,q).catch(e=>{
+      console.error('FALHA tabela '+t+':',e.message);
+      showToast('Erro na tabela: '+t,true);
+      return {_error:true,_table:t,_msg:e.message};
+    })));
+    const erros=results.filter(r=>r&&r._error);
+    if(erros.length){
+      loading(false);
+      document.getElementById('loading').innerHTML='<div style="background:#fff;padding:2rem;border-radius:12px;max-width:480px;text-align:left"><div style="font-size:16px;font-weight:500;color:#b91c1c;margin-bottom:12px">❌ Erro ao carregar dados</div><div style="font-size:13px;color:#374151;margin-bottom:12px">As seguintes tabelas falharam:</div>'+erros.map(e=>'<div style="font-size:13px;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:8px 12px;margin-bottom:6px"><strong>'+e._table+'</strong><br><span style="color:#6b7280">'+e._msg+'</span></div>').join('')+'<button onclick="loadAll()" style="margin-top:12px;padding:8px 16px;background:#eff4ff;color:#1d4ed8;border:1px solid #bfdbfe;border-radius:8px;cursor:pointer;font-size:13px">Tentar novamente</button></div>';
+      document.getElementById('loading').classList.remove('hidden');
+      return;
+    }
     const [ps,comps,sessions,bts,comments,persp,ativs,pdis,milestones,fb,cargo,
            tps,tpComps,tpContacts,tpSlas,tpEvals,tpRisks,
-           risks,incidents,desenqs,indicators]=await Promise.all([
-      get('people','?order=id.asc'),
-      get('competencies','?order=id.asc'),
-      get('sessions','?order=date.asc'),
-      get('bottlenecks','?order=id.asc'),
-      get('comments','?order=id.asc'),
-      get('perspectiva','?order=id.asc'),
-      get('atividades','?order=id.asc'),
-      get('pdis','?order=id.asc'),
-      get('milestones','?order=id.asc'),
-      get('feedback360','?order=id.asc'),
-      get('cargo_historico','?order=date.asc'),
-      get('third_parties','?order=id.asc'),
-      get('tp_competencies','?order=id.asc').catch(()=>[]),
-      get('tp_contacts','?order=id.asc'),
-      get('tp_slas','?order=id.asc'),
-      get('tp_evaluations','?order=id.asc'),
-      get('tp_risks','?order=id.asc'),
-      get('risks','?order=id.asc'),
-      get('risk_incidents','?order=date.asc'),
-      get('risk_desenquadramentos','?order=date.asc').catch(()=>[]),
-      get('risk_indicators','?order=id.asc'),
-    ]);
+           risks,incidents,desenqs,indicators]=results;
 
     people=(ps||[]).map(p=>({...p,
       _comps:(comps||[]).filter(x=>x.person_id===p.id),
