@@ -1569,11 +1569,8 @@ function _renderROIndicators(){
     const st=STATUS_BAR[i.status]||STATUS_BAR.ok;
     const cur=parseFloat(i.current_value);
     const tgt=parseFloat(i.target);
-    // calcular % da barra: se tem meta numérica, usa proporção; senão usa 70%
     let pct=70;
     if(!isNaN(cur)&&!isNaN(tgt)&&tgt>0){
-      // meta pode ser < ou > dependendo do KPI
-      // heurística: se target contém < a barra é inversa
       const isLower=(i.target||'').includes('<');
       pct=isLower?Math.min(100,Math.max(0,(tgt/cur)*100)):Math.min(100,Math.max(0,(cur/tgt)*100));
     }
