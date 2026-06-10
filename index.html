@@ -1722,7 +1722,6 @@ function renderROCharts(){
   _renderDonut('desenq-donut-status', roDesenqs, 'status', ['aberto','em resolução','resolvido'],
     ['#fef2f2','#fff7ed','#f0fdf4'], ['#f87171','#fb923c','#4ade80'], desenqDonutStatus, c=>{desenqDonutStatus=c;});
   // Barras indicadores
-  _renderIndBar();
 }
 
 function _renderRiskMatrix(){
@@ -1753,44 +1752,6 @@ function _renderRiskMatrix(){
     });
   });
   el.innerHTML=html;
-}
-
-function _renderDonut(canvasId, data, field, labels, bgColors, borderColors, chartRef, setter){
-  const canvas=document.getElementById(canvasId);
-  if(!canvas)return;
-  if(chartRef)chartRef.destroy();
-  const counts=labels.map(l=>data.filter(x=>x[field]===l).length);
-  if(counts.every(c=>c===0)){
-    canvas.getContext('2d').clearRect(0,0,canvas.width,canvas.height);
-    setter(null);return;
-  }
-  const chart=new Chart(canvas.getContext('2d'),{
-    type:'doughnut',
-    data:{labels,datasets:[{data:counts,backgroundColor:bgColors,borderColor:borderColors,borderWidth:2,hoverOffset:6}]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:11},boxWidth:14,padding:10}},tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${ctx.parsed}`}}},cutout:'62%'}
-  });
-  setter(chart);
-}
-
-  const BAR_COLORS=['#bfdbfe','#bbf7d0','#fde68a','#e9d5ff','#fed7aa','#99f6e4','#fca5a5','#d9f99d'];
-  const BAR_BORDER=['#60a5fa','#4ade80','#fbbf24','#c084fc','#fb923c','#34d399','#f87171','#86efac'];
-  const labels=inds.map(i=>i.name||i.title||'');
-  const current=inds.map(i=>parseFloat(i.current_value)||0);
-  const target=inds.map(i=>parseFloat(i.target)||null);
-  const datasets=[{
-    label:'Valor atual',
-    data:current,
-    backgroundColor:inds.map((_,i)=>BAR_COLORS[i%BAR_COLORS.length]),
-    borderColor:inds.map((_,i)=>BAR_BORDER[i%BAR_BORDER.length]),
-    borderWidth:2,borderRadius:6,
-  }];
-  if(target.some(t=>t!==null)){
-    datasets.push({label:'Meta',data:target,backgroundColor:'transparent',borderColor:'#94a3b8',borderWidth:2,type:'line',pointRadius:5,pointBackgroundColor:'#94a3b8'});
-  }
-  indBarChart=new Chart(canvas.getContext('2d'),{
-    type:'bar',data:{labels,datasets},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:11},boxWidth:14}}},scales:{y:{beginAtZero:true,grid:{color:'rgba(0,0,0,0.05)'},ticks:{color:'#9ca3af',font:{size:11}}},x:{ticks:{color:'#6b7280',font:{size:11}},grid:{display:false}}}}
-  });
 }
 
 // ══════════════════════════════════════════════════════════
