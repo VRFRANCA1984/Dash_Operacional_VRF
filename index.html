@@ -1126,7 +1126,7 @@ async function savePerson(){
     closePersonModal();renderCards();
   }catch(e){showToast('Erro: '+e.message,true);}
 }
-async async function deletePerson(){
+async function deletePerson(){
   if(!gpActiveId||!confirm('Excluir este membro e todos os seus dados?'))return;
   try{
     const pid=gpActiveId;
