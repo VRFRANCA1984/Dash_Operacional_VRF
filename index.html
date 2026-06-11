@@ -1065,7 +1065,7 @@ async async function save1on1(){
   const date=document.getElementById('f-date').value,score=parseFloat(document.getElementById('f-score').value)||7;
   const notes=document.getElementById('f-notes').value.trim()||'(sem anotações)',tag=document.getElementById('f-tag').value;
   try{
-    const r=await post('sessions',{person_id:pid,date,mood:parseInt(score)||5,actions:notes});
+    const r=await post('sessions',{person_id:pid,date,mood:parseInt(score)||5,actions:notes,user_id:'00000000-0000-0000-0000-000000000000'});
     const p=people.find(x=>x.id===pid);p._sessions.push(r[0]);
     closeForm1on1();renderCards();
     if(gpActiveId===pid){renderHistory(p);if(document.getElementById('t-evo').classList.contains('on'))renderEvo(p);}
