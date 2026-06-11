@@ -241,6 +241,7 @@ input[type=range]::-moz-range-progress{background:var(--thumb-color,#3b82f6);hei
   <div class="page-header">
     <div class="page-header-left"><h2>Equipe</h2><p id="gp-sub">Carregando...</p></div>
     <div class="btn-row">
+      <button class="btn btn-primary" onclick="openNew1on1()"><i class="ti ti-plus"></i>Nova 1:1</button>
       <button class="btn" onclick="openCompare()"><i class="ti ti-chart-radar"></i>Comparar</button>
       <button class="btn" onclick="exportAllPDF()"><i class="ti ti-file-download"></i>PDF Geral</button>
       <button class="btn btn-primary" onclick="openAddPerson()"><i class="ti ti-plus"></i>Novo membro</button>
@@ -280,6 +281,7 @@ input[type=range]::-moz-range-progress{background:var(--thumb-color,#3b82f6);hei
       <div class="btn-row">
         <button class="btn btn-sm" onclick="openNew1on1('active')"><i class="ti ti-plus"></i>1:1</button>
         <button class="btn btn-sm" onclick="openEditPerson()"><i class="ti ti-pencil"></i>Editar</button>
+        <button class="btn btn-sm btn-red" onclick="deletePerson()"><i class="ti ti-trash"></i>Excluir</button>
         <button class="btn btn-sm" onclick="exportPersonPDF()"><i class="ti ti-file-download"></i>PDF</button>
       </div>
     </div>
@@ -1124,6 +1126,29 @@ async function savePerson(){
     closePersonModal();renderCards();
   }catch(e){showToast('Erro: '+e.message,true);}
 }
+async function deletePerson(){
+  if(!gpActiveId||!confirm('Excluir este membro e todos os seus dados?'))return;
+  try{
+    const pid=gpActiveId;
+    await del('sessions',`?person_id=eq.${pid}`);
+    await del('competencies',`?person_id=eq.${pid}`);
+    await del('bottlenecks',`?person_id=eq.${pid}`);
+    await del('comments',`?person_id=eq.${pid}`);
+    await del('perspectiva',`?person_id=eq.${pid}`);
+    await del('atividades',`?person_id=eq.${pid}`);
+    const pPdis=(people.find(x=>x.id===pid)||{})._pdis||[];
+    for(const pdi of pPdis) await del('milestones',`?pdi_id=eq.${pdi.id}`);
+    await del('pdis',`?person_id=eq.${pid}`);
+    await del('feedback360',`?person_id=eq.${pid}`);
+    await del('cargo_historico',`?person_id=eq.${pid}`);
+    await del('people',`?id=eq.${pid}`);
+    people=people.filter(x=>x.id!==pid);
+    gpActiveId=null;
+    document.getElementById('detail-panel').classList.remove('vis');
+    renderCards();
+    showToast('Membro excluído');
+  }catch(e){showToast('Erro: '+e.message,true);}
+}
 function pdfHeader(doc,title){doc.setFont('helvetica','bold');doc.setFontSize(16);doc.setTextColor(26,26,24);doc.text(title,14,18);doc.setFont('helvetica','normal');doc.setFontSize(9);doc.setTextColor(150,150,145);doc.text('Exportado em '+new Date().toLocaleDateString('pt-BR'),14,25);return 35;}
 function exportAllPDF(){
   const{jsPDF}=window.jspdf;const doc=new jsPDF();let y=pdfHeader(doc,'Dashboard de evolucao dos membros');
@@ -1604,6 +1629,14 @@ function _renderROIndicators(){
   cards.forEach(c=>grid.appendChild(c));
   el.appendChild(grid);
 }
+let _roEditType=null,_roEditId=null;
+const RO_LABELS={risk:'Risco',incident:'Incidente',desenq:'Desenquadramento',indicator:'Indicador'};
+const RO_FORMS={
+  risk:`<div class="form-grid"><div class="form-field form-field-full"><label>Título</label><input type="text" id="rof-title" placeholder="Nome do risco"/></div><div class="form-field"><label>Severidade</label><select id="rof-sev"><option value="crítico">Crítico</option><option value="alto">Alto</option><option value="médio">Médio</option><option value="baixo">Baixo</option></select></div><div class="form-field"><label>Probabilidade</label><select id="rof-prob"><option value="alta">Alta</option><option value="média">Média</option><option value="baixa">Baixa</option></select></div><div class="form-field"><label>Status</label><select id="rof-status"><option value="aberto">Aberto</option><option value="em mitigação">Em mitigação</option><option value="monitorado">Monitorado</option><option value="encerrado">Encerrado</option></select></div><div class="form-field"><label>Responsável</label><input type="text" id="rof-responsible"/></div><div class="form-field form-field-full"><label>Descrição</label><textarea id="rof-desc" rows="2"></textarea></div></div>`,
+  incident:`<div class="form-grid"><div class="form-field form-field-full"><label>Título</label><input type="text" id="rof-title"/></div><div class="form-field"><label>Data</label><input type="date" id="rof-date"/></div><div class="form-field"><label>Severidade</label><select id="rof-sev"><option value="crítico">Crítico</option><option value="alto">Alto</option><option value="médio">Médio</option><option value="baixo">Baixo</option></select></div><div class="form-field"><label>Status</label><select id="rof-status"><option value="aberto">Aberto</option><option value="em resolução">Em resolução</option><option value="resolvido">Resolvido</option></select></div><div class="form-field"><label>Responsável</label><input type="text" id="rof-responsible"/></div><div class="form-field form-field-full"><label>Descrição</label><textarea id="rof-desc" rows="2"></textarea></div><div class="form-field form-field-full"><label>Resolução</label><textarea id="rof-resolution" rows="2"></textarea></div></div>`,
+  desenq:`<div class="form-grid"><div class="form-field form-field-full"><label>Título / norma violada</label><input type="text" id="rof-title"/></div><div class="form-field"><label>Data</label><input type="date" id="rof-date"/></div><div class="form-field"><label>Severidade</label><select id="rof-sev"><option value="crítico">Crítico</option><option value="alto">Alto</option><option value="médio">Médio</option><option value="baixo">Baixo</option></select></div><div class="form-field"><label>Status</label><select id="rof-status"><option value="aberto">Aberto</option><option value="em resolução">Em resolução</option><option value="resolvido">Resolvido</option></select></div><div class="form-field"><label>Responsável</label><input type="text" id="rof-responsible"/></div><div class="form-field form-field-full"><label>Descrição</label><textarea id="rof-desc" rows="2"></textarea></div><div class="form-field form-field-full"><label>Plano de regularização</label><textarea id="rof-resolution" rows="2"></textarea></div></div>`,
+  indicator:`<div class="form-grid"><div class="form-field form-field-full"><label>Nome do indicador</label><input type="text" id="rof-title"/></div><div class="form-field"><label>Meta</label><input type="text" id="rof-target"/></div><div class="form-field"><label>Valor atual</label><input type="text" id="rof-current"/></div><div class="form-field"><label>Unidade</label><input type="text" id="rof-unit" placeholder="%, qtd, R$..."/></div><div class="form-field"><label>Status</label><select id="rof-status"><option value="ok">OK</option><option value="atenção">Atenção</option><option value="crítico">Crítico</option></select></div><div class="form-field"><label>Responsável</label><input type="text" id="rof-responsible"/></div><div class="form-field form-field-full"><label>Descrição</label><textarea id="rof-desc" rows="2"></textarea></div></div>`
+};
 function openROModal(type,id=null){
   _roEditType=type;_roEditId=id;
   document.getElementById('ro-modal-title').textContent=(id?'Editar ':'Novo ')+RO_LABELS[type];
