@@ -1126,28 +1126,35 @@ async function savePerson(){
     closePersonModal();renderCards();
   }catch(e){showToast('Erro: '+e.message,true);}
 }
-async function deletePerson(){
+function deletePerson(){
   if(!gpActiveId||!confirm('Excluir este membro e todos os seus dados?'))return;
-  try{
-    const pid=gpActiveId;
-    await del('sessions',`?person_id=eq.${pid}`);
-    await del('competencies',`?person_id=eq.${pid}`);
-    await del('bottlenecks',`?person_id=eq.${pid}`);
-    await del('comments',`?person_id=eq.${pid}`);
-    await del('perspectiva',`?person_id=eq.${pid}`);
-    await del('atividades',`?person_id=eq.${pid}`);
-    const pPdis=(people.find(x=>x.id===pid)||{})._pdis||[];
-    for(const pdi of pPdis) await del('milestones',`?pdi_id=eq.${pdi.id}`);
-    await del('pdis',`?person_id=eq.${pid}`);
-    await del('feedback360',`?person_id=eq.${pid}`);
-    await del('cargo_historico',`?person_id=eq.${pid}`);
-    await del('people',`?id=eq.${pid}`);
-    people=people.filter(x=>x.id!==pid);
-    gpActiveId=null;
-    document.getElementById('detail-panel').classList.remove('vis');
-    renderCards();
-    showToast('Membro excluído');
-  }catch(e){showToast('Erro: '+e.message,true);}
+  const pid=gpActiveId;
+  const p=people.find(x=>x.id===pid)||{};
+  const pdiIds=((p._pdis)||[]).map(x=>x.id);
+  const delAll=()=>{
+    const queries=[
+      del('sessions',`?person_id=eq.${pid}`),
+      del('competencies',`?person_id=eq.${pid}`),
+      del('bottlenecks',`?person_id=eq.${pid}`),
+      del('comments',`?person_id=eq.${pid}`),
+      del('perspectiva',`?person_id=eq.${pid}`),
+      del('atividades',`?person_id=eq.${pid}`),
+      del('pdis',`?person_id=eq.${pid}`),
+      del('feedback360',`?person_id=eq.${pid}`),
+      del('cargo_historico',`?person_id=eq.${pid}`),
+      ...pdiIds.map(id=>del('milestones',`?pdi_id=eq.${id}`)),
+    ];
+    Promise.all(queries).then(()=>{
+      return del('people',`?id=eq.${pid}`);
+    }).then(()=>{
+      people=people.filter(x=>x.id!==pid);
+      gpActiveId=null;
+      document.getElementById('detail-panel').classList.remove('vis');
+      renderCards();
+      showToast('Membro excluído');
+    }).catch(e=>showToast('Erro: '+e.message,true));
+  };
+  delAll();
 }
 function pdfHeader(doc,title){doc.setFont('helvetica','bold');doc.setFontSize(16);doc.setTextColor(26,26,24);doc.text(title,14,18);doc.setFont('helvetica','normal');doc.setFontSize(9);doc.setTextColor(150,150,145);doc.text('Exportado em '+new Date().toLocaleDateString('pt-BR'),14,25);return 35;}
 function exportAllPDF(){
