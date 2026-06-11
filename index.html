@@ -547,15 +547,12 @@ input[type=range]::-moz-range-progress{background:var(--thumb-color,#3b82f6);hei
     <select class="filter-select" id="ro-inc-filter-status" onchange="renderROSub('incidents')"><option value="">Todos os status</option><option value="aberto">Aberto</option><option value="em resolução">Em resolução</option><option value="resolvido">Resolvido</option></select>
   </div>
   <div id="ro-incidents-list"></div>
-  <div style="margin-top:2rem;display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;max-width:600px">
-    <div>
-      <div style="font-size:13px;font-weight:500;margin-bottom:8px;color:var(--text2)">Por severidade</div>
-      <div style="position:relative;height:200px"><canvas id="inc-donut-sev"></canvas></div>
+  <div style="margin-top:2rem">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:8px">
+      <div style="font-size:13px;font-weight:500;color:var(--text2)">Evolução de incidentes</div>
+      <div id="inc-trend-badge" style="font-size:12px;padding:3px 10px;border-radius:20px;background:#f3f4f6;color:#374151"></div>
     </div>
-    <div>
-      <div style="font-size:13px;font-weight:500;margin-bottom:8px;color:var(--text2)">Por status</div>
-      <div style="position:relative;height:200px"><canvas id="inc-donut-status"></canvas></div>
-    </div>
+    <div style="position:relative;height:220px"><canvas id="inc-line-chart"></canvas></div>
   </div>
 </div>
 </div>
@@ -583,15 +580,12 @@ input[type=range]::-moz-range-progress{background:var(--thumb-color,#3b82f6);hei
     <select class="filter-select" id="ro-desenq-filter-status" onchange="renderROSub('desenq')"><option value="">Todos os status</option><option value="aberto">Aberto</option><option value="em resolução">Em resolução</option><option value="resolvido">Resolvido</option></select>
   </div>
   <div id="ro-desenq-list"></div>
-  <div style="margin-top:2rem;display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;max-width:600px">
-    <div>
-      <div style="font-size:13px;font-weight:500;margin-bottom:8px;color:var(--text2)">Por severidade</div>
-      <div style="position:relative;height:200px"><canvas id="desenq-donut-sev"></canvas></div>
+  <div style="margin-top:2rem">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:8px">
+      <div style="font-size:13px;font-weight:500;color:var(--text2)">Evolução de desenquadramentos</div>
+      <div id="desenq-trend-badge" style="font-size:12px;padding:3px 10px;border-radius:20px;background:#f3f4f6;color:#374151"></div>
     </div>
-    <div>
-      <div style="font-size:13px;font-weight:500;margin-bottom:8px;color:var(--text2)">Por status</div>
-      <div style="position:relative;height:200px"><canvas id="desenq-donut-status"></canvas></div>
-    </div>
+    <div style="position:relative;height:220px"><canvas id="desenq-line-chart"></canvas></div>
   </div>
 </div>
 </div>
@@ -1460,14 +1454,8 @@ const IND_STATUS={ok:{bg:'#f0fdf4',text:'#15803d'},'atenção':{bg:'#fffbeb',tex
 
 function renderROSub(sub){
   if(sub==='risks'||sub===undefined){_renderROrisks();setTimeout(()=>_renderRiskMatrix(),50);}
-  if(sub==='incidents'||sub===undefined){_renderROIncidents();setTimeout(()=>{
-    _renderDonut('inc-donut-sev',roIncidents,'severity',['crítico','alto','médio','baixo'],['#fdf2f8','#fef2f2','#fff7ed','#f0fdf4'],['#e879f9','#f87171','#fb923c','#4ade80'],incDonutSev,c=>{incDonutSev=c;});
-    _renderDonut('inc-donut-status',roIncidents,'status',['aberto','em resolução','resolvido'],['#fef2f2','#fff7ed','#f0fdf4'],['#f87171','#fb923c','#4ade80'],incDonutStatus,c=>{incDonutStatus=c;});
-  },50);}
-  if(sub==='desenq'||sub===undefined){_renderRODesenq();setTimeout(()=>{
-    _renderDonut('desenq-donut-sev',roDesenqs,'severity',['crítico','alto','médio','baixo'],['#fdf2f8','#fef2f2','#fff7ed','#f0fdf4'],['#e879f9','#f87171','#fb923c','#4ade80'],desenqDonutSev,c=>{desenqDonutSev=c;});
-    _renderDonut('desenq-donut-status',roDesenqs,'status',['aberto','em resolução','resolvido'],['#fef2f2','#fff7ed','#f0fdf4'],['#f87171','#fb923c','#4ade80'],desenqDonutStatus,c=>{desenqDonutStatus=c;});
-  },50);}
+  if(sub==='incidents'||sub===undefined){_renderROIncidents();setTimeout(()=>_renderLineChart('inc-line-chart','inc-trend-badge',roIncidents),50);}
+  if(sub==='desenq'||sub===undefined){_renderRODesenq();setTimeout(()=>_renderLineChart('desenq-line-chart','desenq-trend-badge',roDesenqs),50);}
   if(sub==='indicators'||sub===undefined){_renderROIndicators();}
 }
 
@@ -1748,6 +1736,94 @@ const DONUT_SEV_BORDER=['#e879f9','#f87171','#fb923c','#4ade80'];
 const DONUT_STATUS_COLORS=['#fef2f2','#fff7ed','#f0fdf4','#eff6ff'];
 const DONUT_STATUS_BORDER=['#f87171','#fb923c','#4ade80','#60a5fa'];
 
+let incLineChart=null, desenqLineChart=null;
+
+function _renderLineChart(canvasId, badgeId, data){
+  const canvas=document.getElementById(canvasId);
+  if(!canvas)return;
+  const badge=document.getElementById(badgeId);
+
+  // Agrupar por mês usando date field
+  const byMonth={};
+  data.forEach(item=>{
+    const d=item.date||item.created_at||'';
+    if(!d)return;
+    const key=d.substr(0,7); // YYYY-MM
+    byMonth[key]=(byMonth[key]||0)+1;
+  });
+
+  const sorted=Object.keys(byMonth).sort();
+  if(sorted.length===0){
+    canvas.getContext('2d').clearRect(0,0,canvas.width,canvas.height);
+    if(badge)badge.textContent='Sem dados com data';
+    return;
+  }
+
+  // Calcular razão de crescimento: (ultimo - penultimo) / penultimo * 100
+  const counts=sorted.map(k=>byMonth[k]);
+  let trendText='';
+  let trendBg='#f3f4f6';
+  let trendColor='#374151';
+  if(counts.length>=2){
+    const last=counts[counts.length-1];
+    const prev=counts[counts.length-2];
+    if(prev>0){
+      const pct=((last-prev)/prev*100).toFixed(0);
+      const growing=last>prev;
+      trendText=(growing?'↑ +':'↓ ')+Math.abs(pct)+'% vs mês anterior';
+      trendBg=growing?'#fef2f2':'#f0fdf4';
+      trendColor=growing?'#b91c1c':'#15803d';
+    }
+  }else{
+    trendText=counts[0]+' no período';
+  }
+  if(badge){badge.textContent=trendText;badge.style.background=trendBg;badge.style.color=trendColor;}
+
+  // Labels formatados (mês/ano)
+  const months=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  const labels=sorted.map(k=>{const[y,m]=k.split('-');return months[parseInt(m)-1]+'/'+y.substr(2);});
+
+  // Destruir chart anterior
+  const chartKey=canvasId==='inc-line-chart'?'incLineChart':'desenqLineChart';
+  if(window[chartKey])window[chartKey].destroy();
+
+  // Cor da linha: vermelho se crescendo, verde se reduzindo
+  const growing=counts.length>=2&&counts[counts.length-1]>counts[counts.length-2];
+  const lineColor=growing?'#f87171':'#4ade80';
+  const fillColor=growing?'#fef2f2':'#f0fdf4';
+
+  const chart=new Chart(canvas.getContext('2d'),{
+    type:'line',
+    data:{
+      labels,
+      datasets:[{
+        label:'Total',
+        data:counts,
+        borderColor:lineColor,
+        backgroundColor:fillColor,
+        pointBackgroundColor:lineColor,
+        pointRadius:5,
+        pointHoverRadius:7,
+        borderWidth:2.5,
+        fill:true,
+        tension:0.3
+      }]
+    },
+    options:{
+      responsive:true,
+      maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{label:ctx=>`${ctx.parsed.y} ocorrência${ctx.parsed.y!==1?'s':''}`}}
+      },
+      scales:{
+        y:{beginAtZero:true,ticks:{stepSize:1,color:'#9ca3af',font:{size:11}},grid:{color:'rgba(0,0,0,0.05)'}},
+        x:{ticks:{color:'#9ca3af',font:{size:11}},grid:{display:false}}
+      }
+    }
+  });
+  window[chartKey]=chart;
+}
 function renderROCharts(){
   // Matriz de risco
   _renderRiskMatrix();
