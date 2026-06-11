@@ -1126,7 +1126,7 @@ async function savePerson(){
     closePersonModal();renderCards();
   }catch(e){showToast('Erro: '+e.message,true);}
 }
-async function deletePerson(){
+async async function deletePerson(){
   if(!gpActiveId||!confirm('Excluir este membro e todos os seus dados?'))return;
   try{
     const pid=gpActiveId;
@@ -1629,7 +1629,7 @@ function _renderROIndicators(){
   cards.forEach(c=>grid.appendChild(c));
   el.appendChild(grid);
 }
-let _roEditType=null,_roEditId=null;
+
 const RO_LABELS={risk:'Risco',incident:'Incidente',desenq:'Desenquadramento',indicator:'Indicador'};
 const RO_FORMS={
   risk:`<div class="form-grid"><div class="form-field form-field-full"><label>Título</label><input type="text" id="rof-title" placeholder="Nome do risco"/></div><div class="form-field"><label>Severidade</label><select id="rof-sev"><option value="crítico">Crítico</option><option value="alto">Alto</option><option value="médio">Médio</option><option value="baixo">Baixo</option></select></div><div class="form-field"><label>Probabilidade</label><select id="rof-prob"><option value="alta">Alta</option><option value="média">Média</option><option value="baixa">Baixa</option></select></div><div class="form-field"><label>Status</label><select id="rof-status"><option value="aberto">Aberto</option><option value="em mitigação">Em mitigação</option><option value="monitorado">Monitorado</option><option value="encerrado">Encerrado</option></select></div><div class="form-field"><label>Responsável</label><input type="text" id="rof-responsible"/></div><div class="form-field form-field-full"><label>Descrição</label><textarea id="rof-desc" rows="2"></textarea></div></div>`,
