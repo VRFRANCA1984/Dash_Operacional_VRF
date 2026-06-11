@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -1060,7 +1059,7 @@ function openNew1on1(target){
   form.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 function closeForm1on1(){document.getElementById('form-1on1').classList.remove('vis');}
-async async function save1on1(){
+async function save1on1(){
   const pid=parseInt(document.getElementById('f-person').value);
   const date=document.getElementById('f-date').value,score=parseFloat(document.getElementById('f-score').value)||7;
   const notes=document.getElementById('f-notes').value.trim()||'(sem anotações)',tag=document.getElementById('f-tag').value;
