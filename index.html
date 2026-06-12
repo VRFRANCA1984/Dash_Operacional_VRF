@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -539,7 +540,7 @@ input[type=range]::-moz-range-progress{background:var(--thumb-color,#3b82f6);hei
   <div id="ro-risks-list"></div>
   <div style="margin-top:2rem">
     <div style="font-size:14px;font-weight:500;margin-bottom:1rem">Matriz de Risco</div>
-    <div id="ro-risk-matrix" style="display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:4px;max-width:520px">
+    <div id="ro-risk-matrix" style="max-width:560px">
       <!-- renderizada via JS -->
     </div>
   </div>
@@ -677,6 +678,10 @@ input[type=range]::-moz-range-progress{background:var(--thumb-color,#3b82f6);hei
       <option value="Important">Important</option>
       <option value="Critical">Critical</option>
     </select>
+    <select class="filter-select" id="todo-sort" onchange="renderTodos()">
+      <option value="bucket">Ordenar por Bucket</option>
+      <option value="date">Ordenar por Data</option>
+    </select>
   </div>
   <div id="todo-table-wrap" style="overflow-x:auto"></div>
 </div>
@@ -743,7 +748,7 @@ input[type=range]::-moz-range-progress{background:var(--thumb-color,#3b82f6);hei
     <div id="tp-cmp-checkboxes" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1rem"></div>
     <div style="position:relative;width:100%;height:300px"><canvas id="tp-compare-chart"></canvas></div>
     <div id="tp-compare-stats" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-top:1rem"></div>
-    <div class="modal-footer"><button class="btn" onclick="document.getElementById('tp-compare-modal').classList.remove('vis')">Fechar</button></div>
+    <div class="modal-footer"><button class="btn btn-primary" onclick="exportTPComparePDF()"><i class="ti ti-file-download"></i>PDF</button><button class="btn" onclick="document.getElementById('tp-compare-modal').classList.remove('vis')">Fechar</button></div>
   </div>
 </div>
 
@@ -839,6 +844,10 @@ const PALETTE=[
   {bg:'#eff4ff',text:'#1d4ed8',bar:'#3b82f6'},{bg:'#f0fdf4',text:'#15803d',bar:'#22c55e'},
   {bg:'#fffbeb',text:'#92400e',bar:'#f59e0b'},{bg:'#fdf4ff',text:'#7e22ce',bar:'#a855f7'},
   {bg:'#fff1f2',text:'#9f1239',bar:'#f43f5e'},{bg:'#f0fdfa',text:'#115e59',bar:'#14b8a6'},
+];
+const CHART_COLORS=[
+  {bar:'#3b82f6'},{bar:'#f97316'},{bar:'#16a34a'},{bar:'#a855f7'},
+  {bar:'#ef4444'},{bar:'#06b6d4'},{bar:'#ec4899'},{bar:'#eab308'},
 ];
 const COMP_NAMES=['Entrega','Comunicação','Autonomia','Colaboração','Inovação'];
 const TAG_STYLE={geral:{bg:'#f3f4f6',text:'#374151',dot:'#9ca3af'},entrega:{bg:'#eff4ff',text:'#1d4ed8',dot:'#3b82f6'},gargalo:{bg:'#fef2f2',text:'#b91c1c',dot:'#dc2626'},desenvolvimento:{bg:'#fffbeb',text:'#92400e',dot:'#f59e0b'},feedback:{bg:'#fdf4ff',text:'#7e22ce',dot:'#a855f7'},'liderança':{bg:'#f0fdf4',text:'#15803d',dot:'#22c55e'},autonomia:{bg:'#f0fdf4',text:'#15803d',dot:'#22c55e'},'inovação':{bg:'#f0fdfa',text:'#115e59',dot:'#14b8a6'}};
@@ -1176,9 +1185,9 @@ function renderCompare(){
   const DASHES=[[],[5,3],[2,4],[8,3,2,3]];
   compareChart=new Chart(ctx,{type:'radar',data:{
     labels:COMP_NAMES,
-    datasets:selected.map((p,i)=>{const c=getColor(p.color_idx||0);return{label:p.name,data:(p._comps||[]).map(x=>x.score),borderColor:c.bar,backgroundColor:c.bar+'18',pointBackgroundColor:c.bar,borderWidth:2,pointRadius:4,borderDash:DASHES[i]||[4,2]};})
+    datasets:selected.map((p,i)=>{const c=CHART_COLORS[i%CHART_COLORS.length];return{label:p.name,data:(p._comps||[]).map(x=>x.score),borderColor:c.bar,backgroundColor:c.bar+'18',pointBackgroundColor:c.bar,borderWidth:2,pointRadius:4,borderDash:DASHES[i]||[4,2]};})
   },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:11},boxWidth:12}}},scales:{r:{min:0,max:10,ticks:{stepSize:2,backdropColor:'transparent',color:'#9ca3af'},grid:{color:'rgba(0,0,0,0.08)'},angleLines:{color:'rgba(0,0,0,0.08)'},pointLabels:{font:{size:11},color:'#6b7280'}}}}});
-  document.getElementById('compare-stats').innerHTML=selected.map(p=>{const c=getColor(p.color_idx||0),ls=lastSession(p),t=calcTrend(p);return`<div style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px"><div style="display:flex;gap:6px;align-items:center;margin-bottom:5px"><span style="width:10px;height:10px;background:${c.bar};border-radius:2px;display:inline-block"></span><strong style="font-size:12px">${p.name}</strong></div><div style="font-size:11px;color:var(--text2)">Nota: <b>${ls?ls.score||0:'—'}</b> · Tend: <b>${t===null?'—':t>0?'↑':'↓'}</b> · 1:1s: <b>${(p._sessions||[]).length}</b></div></div>`;}).join('');
+  document.getElementById('compare-stats').innerHTML=selected.map((p,i)=>{const c=CHART_COLORS[i%CHART_COLORS.length],ls=lastSession(p),t=calcTrend(p);return`<div style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px"><div style="display:flex;gap:6px;align-items:center;margin-bottom:5px"><span style="width:10px;height:10px;background:${c.bar};border-radius:2px;display:inline-block"></span><strong style="font-size:12px">${p.name}</strong></div><div style="font-size:11px;color:var(--text2)">Nota: <b>${ls?ls.score||0:'—'}</b> · Tend: <b>${t===null?'—':t>0?'↑':'↓'}</b> · 1:1s: <b>${(p._sessions||[]).length}</b></div></div>`;}).join('');
 }
 
 function openNew1on1(target){
@@ -1305,6 +1314,60 @@ function deletePerson(){
     }).catch(e=>showToast('Erro: '+e.message,true));
   };
   delAll();
+}
+function exportComparePDF(){
+  const checked=[...document.querySelectorAll('#cmp-checkboxes input:checked')].map(cb=>parseInt(cb.value));
+  const selected=checked.map(id=>people.find(x=>x.id===id)).filter(Boolean);
+  if(selected.length<2){showToast('Selecione ao menos 2 membros',true);return;}
+  const{jsPDF}=window.jspdf;const doc=new jsPDF();let y=pdfHeader(doc,'Comparação de membros');
+  const canvas=document.getElementById('compare-chart');
+  if(canvas){
+    const img=canvas.toDataURL('image/png');
+    const w=160,h=w*(canvas.height/canvas.width);
+    doc.addImage(img,'PNG',(210-w)/2,y,w,h);
+    y+=h+10;
+  }
+  doc.setFont('helvetica','bold');doc.setFontSize(11);doc.setTextColor(26,26,24);
+  doc.text('Resumo',14,y);y+=7;
+  doc.setFont('helvetica','normal');doc.setFontSize(10);doc.setTextColor(80,80,80);
+  selected.forEach((p,i)=>{
+    if(y>270){doc.addPage();y=20;}
+    const c=CHART_COLORS[i%CHART_COLORS.length];
+    doc.setFillColor(c.bar);doc.rect(14,y-3.5,4,4,'F');
+    const ls=lastSession(p),t=calcTrend(p);
+    doc.text(`${p.name} — Nota: ${ls?ls.score||0:'—'} · Tend: ${t===null?'—':t>0?'↑':'↓'} · 1:1s: ${(p._sessions||[]).length}`,22,y);
+    y+=6;
+    doc.text('Competências: '+(p._comps||[]).map(c2=>c2.label+' '+c2.score).join(', '),22,y,{maxWidth:175});
+    y+=8;
+  });
+  doc.save('comparacao_membros.pdf');showToast('PDF gerado!');
+}
+function exportTPComparePDF(){
+  const checked=[...document.querySelectorAll('#tp-cmp-checkboxes input:checked')].map(cb=>parseInt(cb.value));
+  const selected=checked.map(id=>tpList.find(x=>x.id===id)).filter(Boolean);
+  if(selected.length<2){showToast('Selecione ao menos 2 parceiros',true);return;}
+  const{jsPDF}=window.jspdf;const doc=new jsPDF();let y=pdfHeader(doc,'Comparação de parceiros');
+  const canvas=document.getElementById('tp-compare-chart');
+  if(canvas){
+    const img=canvas.toDataURL('image/png');
+    const w=160,h=w*(canvas.height/canvas.width);
+    doc.addImage(img,'PNG',(210-w)/2,y,w,h);
+    y+=h+10;
+  }
+  doc.setFont('helvetica','bold');doc.setFontSize(11);doc.setTextColor(26,26,24);
+  doc.text('Resumo',14,y);y+=7;
+  doc.setFont('helvetica','normal');doc.setFontSize(10);doc.setTextColor(80,80,80);
+  selected.forEach((t,i)=>{
+    if(y>270){doc.addPage();y=20;}
+    const c=CHART_COLORS[i%CHART_COLORS.length];
+    doc.setFillColor(c.bar);doc.rect(14,y-3.5,4,4,'F');
+    const avg=(t._tp_comps||[]).length?((t._tp_comps.reduce((a,x)=>a+x.score,0))/(t._tp_comps.length)).toFixed(1):'—';
+    doc.text(`${t.name} — Média: ${avg} · Avaliações: ${(t._evals||[]).length} · Risco: ${t.risk_level||'—'}`,22,y);
+    y+=6;
+    doc.text('Competências: '+(t._tp_comps||[]).map(c2=>c2.label+' '+c2.score).join(', '),22,y,{maxWidth:175});
+    y+=8;
+  });
+  doc.save('comparacao_parceiros.pdf');showToast('PDF gerado!');
 }
 function pdfHeader(doc,title){doc.setFont('helvetica','bold');doc.setFontSize(16);doc.setTextColor(26,26,24);doc.text(title,14,18);doc.setFont('helvetica','normal');doc.setFontSize(9);doc.setTextColor(150,150,145);doc.text('Exportado em '+new Date().toLocaleDateString('pt-BR'),14,25);return 35;}
 function exportAllPDF(){
@@ -1550,9 +1613,9 @@ function renderTPCompare(){
   const DASHES=[[],[5,3],[2,4],[8,3,2,3]];
   tpCompareChart=new Chart(ctx,{type:'radar',data:{
     labels:TP_COMP_NAMES,
-    datasets:selected.map((t,i)=>{const c=getColor(tpList.indexOf(t));const scores=TP_COMP_NAMES.map(l=>{const comp=(t._tp_comps||[]).find(x=>x.label===l);return comp?comp.score:0;});return{label:t.name,data:scores,borderColor:c.bar,backgroundColor:c.bar+'18',pointBackgroundColor:c.bar,borderWidth:2,pointRadius:4,borderDash:DASHES[i]||[4,2]};})
+    datasets:selected.map((t,i)=>{const c=CHART_COLORS[i%CHART_COLORS.length];const scores=TP_COMP_NAMES.map(l=>{const comp=(t._tp_comps||[]).find(x=>x.label===l);return comp?comp.score:0;});return{label:t.name,data:scores,borderColor:c.bar,backgroundColor:c.bar+'18',pointBackgroundColor:c.bar,borderWidth:2,pointRadius:4,borderDash:DASHES[i]||[4,2]};})
   },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:11},boxWidth:12}}},scales:{r:{min:0,max:10,ticks:{stepSize:2,backdropColor:'transparent',color:'#9ca3af'},grid:{color:'rgba(0,0,0,0.08)'},angleLines:{color:'rgba(0,0,0,0.08)'},pointLabels:{font:{size:11},color:'#6b7280'}}}}});
-  document.getElementById('tp-compare-stats').innerHTML=selected.map(t=>{const c=getColor(tpList.indexOf(t));const avg=(t._tp_comps||[]).length?((t._tp_comps.reduce((a,x)=>a+x.score,0))/(t._tp_comps.length)).toFixed(1):'—';return`<div style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px"><div style="display:flex;gap:6px;align-items:center;margin-bottom:5px"><span style="width:10px;height:10px;background:${c.bar};border-radius:2px;display:inline-block"></span><strong style="font-size:12px">${t.name}</strong></div><div style="font-size:11px;color:var(--text2)">Média: <b>${avg}</b> · Avaliações: <b>${(t._evals||[]).length}</b> · Risco: <b>${t.risk_level||'—'}</b></div></div>`;}).join('');
+  document.getElementById('tp-compare-stats').innerHTML=selected.map((t,i)=>{const c=CHART_COLORS[i%CHART_COLORS.length];const avg=(t._tp_comps||[]).length?((t._tp_comps.reduce((a,x)=>a+x.score,0))/(t._tp_comps.length)).toFixed(1):'—';return`<div style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px"><div style="display:flex;gap:6px;align-items:center;margin-bottom:5px"><span style="width:10px;height:10px;background:${c.bar};border-radius:2px;display:inline-block"></span><strong style="font-size:12px">${t.name}</strong></div><div style="font-size:11px;color:var(--text2)">Média: <b>${avg}</b> · Avaliações: <b>${(t._evals||[]).length}</b> · Risco: <b>${t.risk_level||'—'}</b></div></div>`;}).join('');
 }
 function exportOneTPPDF(){
   if(!tpActiveId)return;const t=tpList.find(x=>x.id===tpActiveId);
@@ -2039,29 +2102,52 @@ function _renderRiskMatrix(){
   const el=document.getElementById('ro-risk-matrix');
   if(!el)return;
   const probs=['alta','média','baixa'];
-  const impacts=['crítico','alto','médio','baixo'];
-  // cores da matriz (prob × impact)
-  const matColors={
-    'alta-crítico':'#fecdd3','alta-alto':'#fed7aa','alta-médio':'#fef08a','alta-baixo':'#d9f99d',
-    'média-crítico':'#fed7aa','média-alto':'#fef08a','média-médio':'#d9f99d','média-baixo':'#bbf7d0',
-    'baixa-crítico':'#fef08a','baixa-alto':'#d9f99d','baixa-médio':'#bbf7d0','baixa-baixo':'#bfdbfe',
-  };
-  const matText={
-    'alta-crítico':'#9f1239','alta-alto':'#9a3412','alta-médio':'#713f12','alta-baixo':'#365314',
-    'média-crítico':'#9a3412','média-alto':'#713f12','média-médio':'#365314','média-baixo':'#14532d',
-    'baixa-crítico':'#713f12','baixa-alto':'#365314','baixa-médio':'#14532d','baixa-baixo':'#1e3a8a',
-  };
-  let html='<div style="background:transparent"></div>';
-  impacts.forEach(imp=>{html+=`<div style="font-size:10px;font-weight:500;color:var(--text2);text-align:center;padding:4px">${imp}</div>`;});
+  const impacts=['baixo','médio','alto','crítico'];
+  const probW={alta:3,média:2,baixa:1};
+  const impW={baixo:1,médio:2,alto:3,crítico:4};
+  // gradiente verde -> amarelo -> vermelho conforme score (1..12)
+  function heatColor(score){
+    const max=12;const t=Math.min(1,Math.max(0,(score-1)/(max-1)));
+    let r,g,b;
+    if(t<0.5){const k=t/0.5;r=Math.round(99+(250-99)*k);g=Math.round(153+(204-153)*k);b=Math.round(34+(21-34)*k);}
+    else{const k=(t-0.5)/0.5;r=Math.round(250+(226-250)*k);g=Math.round(204+(75-204)*k);b=Math.round(21+(74-21)*k);}
+    return`rgb(${r},${g},${b})`;
+  }
+  function textColor(score){return score>=7?'#fff':'#1f2937';}
+  let html='<div style="display:flex">';
+  // coluna de labels de probabilidade + grid
+  html+='<div style="display:flex;flex-direction:column;justify-content:center;margin-right:8px;width:60px">';
+  html+='<div style="height:24px"></div>';
+  probs.forEach(p=>{html+=`<div style="height:64px;display:flex;align-items:center;justify-content:flex-end;font-size:11px;font-weight:500;color:var(--text2);text-transform:capitalize;padding-right:6px">${p}</div>`;});
+  html+='</div>';
+  html+='<div style="flex:1">';
+  // header de impactos
+  html+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-bottom:4px">';
+  impacts.forEach(im=>{html+=`<div style="font-size:11px;font-weight:500;color:var(--text2);text-align:center;text-transform:capitalize">${im}</div>`;});
+  html+='</div>';
+  // linhas
   probs.forEach(prob=>{
-    html+=`<div style="font-size:10px;font-weight:500;color:var(--text2);padding:4px;display:flex;align-items:center">${prob}</div>`;
+    html+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-bottom:4px">';
     impacts.forEach(imp=>{
-      const key=prob+'-'+imp;
+      const score=probW[prob]*impW[imp];
       const count=roRisks.filter(r=>(r.prob||r.probability||'média')===prob&&(r.impact||r.severity||'médio')===imp).length;
-      const bg=matColors[key]||'#f3f4f6',tx=matText[key]||'#374151';
-      html+=`<div style="background:${bg};border-radius:8px;padding:8px 4px;text-align:center;cursor:default;min-height:52px;display:flex;flex-direction:column;align-items:center;justify-content:center"><div style="font-size:18px;font-weight:500;color:${tx}">${count||''}</div><div style="font-size:9px;color:${tx};opacity:.7">${count?'risco':'—'}</div></div>`;
+      const bg=heatColor(score),tx=textColor(score);
+      html+=`<div style="background:${bg};border-radius:8px;height:64px;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:transform .12s" onmouseover="this.style.transform='scale(1.04)'" onmouseout="this.style.transform='scale(1)'">
+        <div style="font-size:22px;font-weight:600;color:${tx}">${count||''}</div>
+        <div style="font-size:9px;color:${tx};opacity:.85">${count?(count===1?'risco':'riscos'):'—'}</div>
+      </div>`;
     });
+    html+='</div>';
   });
+  html+='</div></div>';
+  // legenda
+  html+='<div style="display:flex;align-items:center;gap:10px;margin-top:10px;font-size:11px;color:var(--text2)">';
+  html+='<span>Risco:</span>';
+  html+='<div style="display:flex;align-items:center;gap:4px"><div style="width:14px;height:14px;border-radius:4px;background:'+heatColor(1)+'"></div>Baixo</div>';
+  html+='<div style="display:flex;align-items:center;gap:4px"><div style="width:14px;height:14px;border-radius:4px;background:'+heatColor(6)+'"></div>Médio</div>';
+  html+='<div style="display:flex;align-items:center;gap:4px"><div style="width:14px;height:14px;border-radius:4px;background:'+heatColor(12)+'"></div>Alto</div>';
+  html+='<span style="margin-left:auto;color:var(--text3)">Probabilidade × Impacto</span>';
+  html+='</div>';
   el.innerHTML=html;
 }
 
@@ -2189,7 +2275,7 @@ function renderBrainstorm(){
   });
   const grid=document.getElementById('brainstorm-grid');
   if(!list.length){grid.innerHTML='<div style="grid-column:1/-1;font-size:13px;color:var(--text3);padding:2rem 0;text-align:center">Nenhuma nota. Clique em "Nova nota".</div>';return;}
-  grid.innerHTML=list.map(n=>{
+  const cardHtml=n=>{
     const c=_bsColorForCategory(n.category);
     return`<div class="bs-card" style="background:${c.bg}">
       <div class="bs-actions" style="color:${c.foot}">
@@ -2204,6 +2290,15 @@ function renderBrainstorm(){
       <div class="bs-body" style="color:${c.body}">${n.body||''}</div>
       <div class="bs-foot" style="color:${c.foot}">${fmtFull(n.created_at?n.created_at.split('T')[0]:'')}</div>
     </div>`;
+  };
+  // Agrupar por categoria (A-Z) e ordenar por título (A-Z) dentro da categoria
+  const groups={};
+  list.forEach(n=>{const k=n.category||'Sem categoria';(groups[k]=groups[k]||[]).push(n);});
+  const catKeys=Object.keys(groups).sort((a,b)=>a==='Sem categoria'?1:b==='Sem categoria'?-1:a.localeCompare(b,'pt-BR'));
+  grid.innerHTML=catKeys.map(catName=>{
+    const items=[...groups[catName]].sort((a,b)=>(a.title||'').localeCompare(b.title||'','pt-BR'));
+    const cards=items.map(cardHtml).join('');
+    return`<div style="grid-column:1/-1;font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin:${catName===catKeys[0]?'0':'1rem'} 0 -4px;padding-bottom:6px;border-bottom:1px solid var(--border)">${catName} <span style="font-weight:400;color:var(--text3)">(${groups[catName].length})</span></div>`+cards;
   }).join('');
 }
 function openNoteModal(id){
@@ -2301,15 +2396,22 @@ function renderTodos(){
   const wrap=document.getElementById('todo-table-wrap');
   if(!list.length){wrap.innerHTML='<div style="font-size:13px;color:var(--text3);padding:2rem 0;text-align:center">Nenhuma tarefa. Clique em "Nova tarefa".</div>';return;}
 
+  const sortMode=(document.getElementById('todo-sort')||{value:'bucket'}).value;
   const ongoing=list.filter(t=>!t.settlement_date);
   const concluded=list.filter(t=>t.settlement_date);
+  if(sortMode==='date'){
+    const byDate=(a,b)=>(a.start_date||'9999')<(b.start_date||'9999')?-1:(a.start_date||'9999')>(b.start_date||'9999')?1:0;
+    ongoing.sort(byDate);
+    concluded.sort(byDate);
+  }
 
   const rowHtml=t=>{
     const sg=TODO_STAGE_COLORS[t.stage]||TODO_STAGE_COLORS['Starting Stage'];
     const en=TODO_ENERGY_COLORS[t.energy]||TODO_ENERGY_COLORS['Medium Energy'];
     const pr=TODO_PRIORITY_COLORS[t.priority]||TODO_PRIORITY_COLORS['Medium'];
+    const bucketCell=sortMode==='date'?`<td style="font-size:12px;color:var(--text2)">${t.bucket||'—'}</td>`:'';
     return`<tr>
-      <td class="todo-name">${t.name||''}</td>
+      <td class="todo-name">${t.name||''}</td>${bucketCell}
       <td><span class="todo-pill" style="background:${sg.bg};color:${sg.text}">${t.stage||''}</span></td>
       <td><span class="todo-pill" style="background:${en.bg};color:${en.text}">${t.energy||''}</span></td>
       <td><span class="todo-pill" style="background:${pr.bg};color:${pr.text}">${t.priority||''}</span></td>
@@ -2325,23 +2427,27 @@ function renderTodos(){
     </tr>`;
   };
 
+  const bucketTh=sortMode==='date'?'<th>Bucket</th>':'';
   const theadHtml='<thead><tr>'+
-    '<th>Name</th><th>Stage</th><th>Energy</th><th>Priority</th><th>Starting Date</th><th>Expected Date</th><th>Settlement Date</th><th>Duration</th><th>Ongoing</th><th></th>'+
+    '<th>Name</th>'+bucketTh+'<th>Stage</th><th>Energy</th><th>Priority</th><th>Starting Date</th><th>Expected Date</th><th>Settlement Date</th><th>Duration</th><th>Ongoing</th><th></th>'+
     '</tr></thead>';
-
-  // Em andamento — agrupado por bucket
-  const groups={};
-  ongoing.forEach(t=>{const k=t.bucket||'Sem bucket';(groups[k]=groups[k]||[]).push(t);});
-  const bucketKeys=Object.keys(groups).sort((a,b)=>a==='Sem bucket'?1:b==='Sem bucket'?-1:a.localeCompare(b));
+  const colspanN=sortMode==='date'?11:10;
 
   let html='';
   if(ongoing.length){
     html+='<div style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Em andamento <span style="font-weight:400;color:var(--text3)">('+ongoing.length+')</span></div>';
     html+='<table class="todo-table">'+theadHtml+'<tbody>';
-    bucketKeys.forEach(bk=>{
-      html+=`<tr class="todo-bucket-row"><td colspan="10">${bk} <span style="font-weight:400;color:var(--text3)">(${groups[bk].length})</span></td></tr>`;
-      html+=groups[bk].map(rowHtml).join('');
-    });
+    if(sortMode==='date'){
+      html+=ongoing.map(rowHtml).join('');
+    }else{
+      const groups={};
+      ongoing.forEach(t=>{const k=t.bucket||'Sem bucket';(groups[k]=groups[k]||[]).push(t);});
+      const bucketKeys=Object.keys(groups).sort((a,b)=>a==='Sem bucket'?1:b==='Sem bucket'?-1:a.localeCompare(b));
+      bucketKeys.forEach(bk=>{
+        html+=`<tr class="todo-bucket-row"><td colspan="${colspanN}">${bk} <span style="font-weight:400;color:var(--text3)">(${groups[bk].length})</span></td></tr>`;
+        html+=groups[bk].map(rowHtml).join('');
+      });
+    }
     html+='</tbody></table>';
   }else{
     html+='<div style="font-size:13px;color:var(--text3);padding:1rem 0">Nenhuma tarefa em andamento.</div>';
