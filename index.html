@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -22,17 +23,17 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;font-size:15px}
-.sidebar{width:var(--sidebar-w);min-height:100vh;background:#dbeafe;border-right:1px solid #93c5fd;display:flex;flex-direction:column;flex-shrink:0;position:fixed;top:0;left:0;bottom:0;z-index:50;overflow-y:auto}
+.sidebar{width:var(--sidebar-w);min-height:100vh;background:#9ca3af;border-right:1px solid #6b7280;display:flex;flex-direction:column;flex-shrink:0;position:fixed;top:0;left:0;bottom:0;z-index:50;overflow-y:auto}
 .sidebar-logo{padding:1.25rem 1.25rem 1rem;border-bottom:1px solid #93c5fd}
-.sidebar-logo h1{font-size:15px;font-weight:500}
-.sidebar-logo p{font-size:11px;color:var(--text3);margin-top:2px}
+.sidebar-logo h1{font-size:15px;font-weight:500;color:#fff}
+.sidebar-logo p{font-size:11px;color:#f3f4f6;margin-top:2px}
 .sidebar-nav{padding:.75rem;flex:1}
-.nav-section{font-size:10px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;padding:.5rem .5rem .35rem;margin-top:.5rem}
-.nav-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:var(--radius);cursor:pointer;font-size:13px;color:var(--text2);transition:background .15s,color .15s;margin-bottom:2px;border:none;background:none;width:100%;text-align:left}
-.nav-item:hover{background:#bfdbfe;color:#1e3a5f}
-.nav-item.active{background:#ffedd5;color:#c2410c;font-weight:500}
+.nav-section{font-size:10px;font-weight:500;color:#e5e7eb;text-transform:uppercase;letter-spacing:.08em;padding:.5rem .5rem .35rem;margin-top:.5rem}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:var(--radius);cursor:pointer;font-size:13px;color:#fff;transition:background .15s,color .15s;margin-bottom:2px;border:none;background:none;width:100%;text-align:left}
+.nav-item:hover{background:rgba(255,255,255,0.15);color:#fff}
+.nav-item.active{background:#fff;color:#1f2937;font-weight:500}
 .nav-item i{font-size:16px;flex-shrink:0}
-.sidebar-footer{padding:.75rem 1rem;border-top:1px solid #93c5fd;font-size:11px;color:#1e40af}
+.sidebar-footer{padding:.75rem 1rem;border-top:1px solid rgba(255,255,255,0.25);font-size:11px;color:#f3f4f6}
 .sync-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);margin-right:5px;vertical-align:middle}
 .sync-dot.loading{background:var(--amber);animation:pulse 1s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
@@ -208,6 +209,16 @@ input[type=range]::-moz-range-progress{background:var(--thumb-color,#3b82f6);hei
 .metric-c6{background:#fefce8;border-color:#fef08a}.metric-c6 .metric-value{color:#a16207}
 .metric-red{background:#fef2f2;border-color:#fecaca}.metric-red .metric-value{color:#b91c1c}
 .ind-card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.bs-card{border-radius:var(--radius-lg);padding:14px 14px 12px;min-height:140px;display:flex;flex-direction:column;position:relative;box-shadow:0 1px 2px rgba(0,0,0,0.06);transition:transform .12s}
+.bs-card:hover{transform:translateY(-2px)}
+.bs-cats{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap}
+.bs-tag{font-size:10px;padding:2px 8px;border-radius:20px;font-weight:500}
+.bs-title{font-size:13px;font-weight:500;margin-bottom:6px}
+.bs-body{font-size:12px;line-height:1.5;flex:1;white-space:pre-wrap}
+.bs-foot{font-size:10px;margin-top:8px;opacity:.65}
+.bs-actions{position:absolute;top:8px;right:8px;display:flex;gap:6px;opacity:0;transition:opacity .12s}
+.bs-card:hover .bs-actions{opacity:1}
+.bs-actions i{font-size:13px;cursor:pointer}
 .mob-menu-btn{display:none;position:fixed;top:12px;left:12px;z-index:60;background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);padding:8px;cursor:pointer;align-items:center;justify-content:center}
 @media(max-width:768px){.sidebar{transform:translateX(-100%);transition:transform .2s}.sidebar.open{transform:none}.main{margin-left:0}.mob-menu-btn{display:flex}}
 </style>
@@ -224,6 +235,7 @@ input[type=range]::-moz-range-progress{background:var(--thumb-color,#3b82f6);hei
     <button class="nav-item" id="nav-ro-incidents" onclick="showROSector('incidents')"><i class="ti ti-flame"></i>Incidentes</button>
     <button class="nav-item" id="nav-ro-desenq" onclick="showROSector('desenq')"><i class="ti ti-ban"></i>Desenquadramentos</button>
     <button class="nav-item" id="nav-ro-indicators" onclick="showROSector('indicators')"><i class="ti ti-trending-up"></i>Indicadores</button>
+    <button class="nav-item" id="nav-brainstorm" onclick="showSector('brainstorm')"><i class="ti ti-bulb"></i>Brainstorm</button>
     <div class="nav-section" style="margin-top:1rem">Ações rápidas</div>
     <button class="nav-item" onclick="showSector('gp');setTimeout(()=>openNew1on1(),200)"><i class="ti ti-plus"></i>Nova 1:1</button>
     <button class="nav-item" onclick="showROSector('risks');setTimeout(()=>openROModal('risk'),200)"><i class="ti ti-alert-triangle"></i>Novo risco</button>
@@ -613,6 +625,23 @@ input[type=range]::-moz-range-progress{background:var(--thumb-color,#3b82f6);hei
 
 </div>
 </div>
+
+<div class="sector" id="sector-brainstorm">
+<div class="sector-body">
+  <div class="page-header">
+    <div class="page-header-left"><h2>Brainstorm</h2><p>Notas, ideias e comentários da operação</p></div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="openNoteModal()"><i class="ti ti-plus"></i>Nova nota</button>
+    </div>
+  </div>
+  <div class="filter-bar">
+    <div class="search-wrap"><i class="ti ti-search"></i><input type="text" id="bs-search" placeholder="Buscar nota..." oninput="renderBrainstorm()"/></div>
+    <select class="filter-select" id="bs-filter-cat" onchange="renderBrainstorm()"><option value="">Todas as categorias</option></select>
+    <select class="filter-select" id="bs-filter-subcat" onchange="renderBrainstorm()"><option value="">Todas as subcategorias</option></select>
+  </div>
+  <div id="brainstorm-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px"></div>
+</div>
+</div>
 </div><!-- /main -->
 
 <!-- MODAIS GP -->
@@ -691,6 +720,21 @@ input[type=range]::-moz-range-progress{background:var(--thumb-color,#3b82f6);hei
   </div>
 </div>
 <div class="loading" id="loading"><div class="spinner"></div><div style="font-size:13px;color:var(--text2)">Carregando dados...</div></div>
+<div class="modal-backdrop" id="note-modal">
+  <div class="modal" style="max-width:520px">
+    <div class="modal-title" id="note-modal-title">Nova nota</div>
+    <div class="form-grid">
+      <div class="form-field form-field-full"><label>Título</label><input type="text" id="note-title" placeholder="Título da nota"/></div>
+      <div class="form-field"><label>Categoria</label><input type="text" id="note-category" list="bs-cat-list" placeholder="ex: Ideias, Riscos..."/><datalist id="bs-cat-list"></datalist></div>
+      <div class="form-field"><label>Subcategoria</label><input type="text" id="note-subcategory" list="bs-subcat-list" placeholder="ex: Processo, Custo..."/><datalist id="bs-subcat-list"></datalist></div>
+      <div class="form-field form-field-full"><label>Conteúdo</label><textarea id="note-body" rows="4" placeholder="Escreva sua nota, ideia ou comentário..."></textarea></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" onclick="saveNote()"><i class="ti ti-check"></i>Salvar</button>
+      <button class="btn" onclick="closeNoteModal()">Cancelar</button>
+    </div>
+  </div>
+</div>
 <div class="toast" id="toast"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
@@ -760,11 +804,11 @@ function syncOk(){['sync-dot','sync-dot2'].forEach(id=>{const d=document.getElem
 
 // ── NAVEGAÇÃO ─────────────────────────────────────────────
 function showROSector(sub){
-  ['gp','tp','ro-risks','ro-incidents','ro-desenq','ro-indicators'].forEach(k=>{
+  ['gp','tp','ro-risks','ro-incidents','ro-desenq','ro-indicators','brainstorm'].forEach(k=>{
     const el=document.getElementById('sector-'+k);if(el)el.classList.remove('active');
   });
   const el=document.getElementById('sector-ro-'+sub);if(el)el.classList.add('active');
-  ['gp','tp'].forEach(k=>{const n=document.getElementById('nav-'+k);if(n)n.classList.remove('active');});
+  ['gp','tp','brainstorm'].forEach(k=>{const n=document.getElementById('nav-'+k);if(n)n.classList.remove('active');});
   ['risks','incidents','desenq','indicators'].forEach(v=>{
     const n=document.getElementById('nav-ro-'+v);if(n)n.classList.remove('active');
   });
@@ -772,15 +816,16 @@ function showROSector(sub){
   renderROSub(sub);
 }
 function showSector(s){
-  ['gp','tp','ro-risks','ro-incidents','ro-desenq','ro-indicators'].forEach(k=>{
+  ['gp','tp','ro-risks','ro-incidents','ro-desenq','ro-indicators','brainstorm'].forEach(k=>{
     const el=document.getElementById('sector-'+k);if(el)el.classList.remove('active');
   });
   const el=document.getElementById('sector-'+s);if(el)el.classList.add('active');
-  ['gp','tp'].forEach(k=>{const n=document.getElementById('nav-'+k);if(n)n.classList.remove('active');});
+  ['gp','tp','brainstorm'].forEach(k=>{const n=document.getElementById('nav-'+k);if(n)n.classList.remove('active');});
   ['risks','incidents','desenq','indicators'].forEach(v=>{
     const n=document.getElementById('nav-ro-'+v);if(n)n.classList.remove('active');
   });
-  if(s==='gp'||s==='tp'){const n=document.getElementById('nav-'+s);if(n)n.classList.add('active');}
+  if(s==='gp'||s==='tp'||s==='brainstorm'){const n=document.getElementById('nav-'+s);if(n)n.classList.add('active');}
+  if(s==='brainstorm')renderBrainstorm();
 }
 
 // ══════════════════════════════════════════════════════════
@@ -1204,7 +1249,7 @@ function renderTPCards(){
   const grid=document.getElementById('tp-grid');
   if(!tpList.length){grid.innerHTML='<div style="grid-column:1/-1;font-size:13px;color:var(--text3);padding:2rem 0;text-align:center">Nenhum parceiro cadastrado.</div>';return;}
   if(!filtered.length){grid.innerHTML='<div style="grid-column:1/-1;font-size:13px;color:var(--text3);padding:2rem 0;text-align:center">Nenhum resultado.</div>';return;}
-  grid.innerHTML=filtered.map((t,i)=>{
+  const cardHtml=(t,i)=>{
     const c=getColor(i),rl=RL[t.risk_level]||RL.médio,du=daysUntil(t.contract_end);
     const lastEval=(t._evals||[]).length?(t._evals||[]).reduce((a,b)=>a.date>b.date?a:b):null;
     return`<div class="card ${tpActiveId===t.id?'selected':''}" onclick="selectTP(${t.id})">
@@ -1225,6 +1270,14 @@ function renderTPCards(){
       </div>
       ${(t._tp_comps||[]).length?`<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:5px">${(t._tp_comps||[]).map(comp=>`<div style="display:flex;align-items:center;gap:8px"><span style="font-size:11px;color:var(--text2);width:110px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${comp.label}</span><div style="flex:1;height:4px;background:#e5e7eb;border-radius:4px;overflow:hidden"><div style="width:${comp.score*10}%;height:100%;border-radius:4px;background:${c.bar}"></div></div><span style="font-size:11px;color:var(--text2);width:18px;text-align:right;flex-shrink:0">${comp.score}</span></div>`).join('')}</div>`:''}
     </div>`;
+  };
+  // Agrupar por categoria
+  const catGroups={};
+  filtered.forEach(t=>{const k=t.category||'Sem categoria';(catGroups[k]=catGroups[k]||[]).push(t);});
+  const catKeys=Object.keys(catGroups).sort();
+  grid.innerHTML=catKeys.map(catName=>{
+    const items=catGroups[catName].map((t,i)=>cardHtml(t,i)).join('');
+    return`<div style="grid-column:1/-1;font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin:${catName===catKeys[0]?'0':'1rem'} 0 -4px;padding-bottom:6px;border-bottom:1px solid var(--border)">${catName} <span style="font-weight:400;color:var(--text3)">(${catGroups[catName].length})</span></div>`+items;
   }).join('');
 }
 
@@ -1448,6 +1501,7 @@ function exportTPPDF(){
 //  SETOR RO — 4 dashboards individuais
 // ══════════════════════════════════════════════════════════
 let roRisks=[], roIncidents=[], roDesenqs=[], roIndicators=[];
+let brainstormNotes=[], editingNoteId=null;
 const SEV={crítico:{bg:'#fdf2f8',text:'#701a75'},alto:{bg:'#fef2f2',text:'#b91c1c'},'médio':{bg:'#fffbeb',text:'#92400e'},baixo:{bg:'#f0fdf4',text:'#15803d'}};
 const OSTATUS={encerrado:{bg:'#f3f4f6',text:'#6b7280'},'em mitigação':{bg:'#fffbeb',text:'#92400e'},aberto:{bg:'#fef2f2',text:'#b91c1c'},monitorado:{bg:'#eff4ff',text:'#1d4ed8'},'em resolução':{bg:'#fffbeb',text:'#92400e'},resolvido:{bg:'#f0fdf4',text:'#15803d'}};
 const IND_STATUS={ok:{bg:'#f0fdf4',text:'#15803d'},'atenção':{bg:'#fffbeb',text:'#92400e'},crítico:{bg:'#fef2f2',text:'#b91c1c'}};
@@ -1517,22 +1571,27 @@ function _renderROIncidents(){
     return true;
   });
   const el=document.getElementById('ro-incidents-list');
-  el.innerHTML=list.length?list.map(i=>{const sv=SEV[i.severity]||SEV.médio,os=OSTATUS[i.status]||OSTATUS.aberto;
-    return`<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.25rem;margin-bottom:10px">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:6px">
-        <div>
-          <div style="font-size:14px;font-weight:500">${i.title} <span class="tag" style="background:${sv.bg};color:${sv.text}">${i.severity}</span></div>
-          <div style="font-size:11px;color:var(--text3)">${fmtFull(i.date)}${i.responsible?' · Resp: '+i.responsible:''}</div>
-          ${i.description?`<div style="font-size:12px;color:var(--text2);margin-top:3px">${i.description}</div>`:''}
-          ${i.resolution?`<div style="font-size:12px;color:var(--green-text);margin-top:3px"><i class="ti ti-check" style="font-size:11px"></i> ${i.resolution}</div>`:''}
+  if(!list.length){el.innerHTML='<div style="font-size:13px;color:var(--text3);padding:1rem 0">Nenhum incidente.</div>';return;}
+  const groups=_groupByMonth(list,'date');
+  el.innerHTML=groups.map(g=>{
+    const items=g.items.map(i=>{const sv=SEV[i.severity]||SEV.médio,os=OSTATUS[i.status]||OSTATUS.aberto;
+      return`<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.25rem;margin-bottom:10px">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:6px">
+          <div>
+            <div style="font-size:14px;font-weight:500">${i.title} <span class="tag" style="background:${sv.bg};color:${sv.text}">${i.severity}</span></div>
+            <div style="font-size:11px;color:var(--text3)">${fmtFull(i.date)}${i.responsible?' · Resp: '+i.responsible:''}</div>
+            ${i.description?`<div style="font-size:12px;color:var(--text2);margin-top:3px">${i.description}</div>`:''}
+            ${i.resolution?`<div style="font-size:12px;color:var(--green-text);margin-top:3px"><i class="ti ti-check" style="font-size:11px"></i> ${i.resolution}</div>`:''}
+          </div>
+          <div style="display:flex;gap:6px;align-items:center;flex-shrink:0">
+            <span class="tag" style="background:${os.bg};color:${os.text}">${i.status}</span>
+            <button onclick="openROModal('incident',${i.id})" style="background:none;border:none;cursor:pointer;color:var(--text2);font-size:14px"><i class="ti ti-pencil"></i></button>
+            <button onclick="delROItem('incident',${i.id})" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:14px"><i class="ti ti-trash"></i></button>
+          </div>
         </div>
-        <div style="display:flex;gap:6px;align-items:center;flex-shrink:0">
-          <span class="tag" style="background:${os.bg};color:${os.text}">${i.status}</span>
-          <button onclick="openROModal('incident',${i.id})" style="background:none;border:none;cursor:pointer;color:var(--text2);font-size:14px"><i class="ti ti-pencil"></i></button>
-          <button onclick="delROItem('incident',${i.id})" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:14px"><i class="ti ti-trash"></i></button>
-        </div>
-      </div>
-    </div>`;}).join(''):'<div style="font-size:13px;color:var(--text3);padding:1rem 0">Nenhum incidente.</div>';
+      </div>`;}).join('');
+    return`<div style="margin-bottom:1.5rem"><div style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border)">${g.label} <span style="font-weight:400;color:var(--text3)">(${g.items.length})</span></div>${items}</div>`;
+  }).join('');
 }
 
 function _renderRODesenq(){
@@ -1552,22 +1611,27 @@ function _renderRODesenq(){
     return true;
   });
   const el=document.getElementById('ro-desenq-list');
-  el.innerHTML=list.length?list.map(d=>{const sv=SEV[d.severity]||SEV.médio,os=OSTATUS[d.status]||OSTATUS.aberto;
-    return`<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.25rem;margin-bottom:10px">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:6px">
-        <div>
-          <div style="font-size:14px;font-weight:500">${d.title} <span class="tag" style="background:${sv.bg};color:${sv.text}">${d.severity}</span></div>
-          <div style="font-size:11px;color:var(--text3)">${fmtFull(d.date)}${d.responsible?' · Resp: '+d.responsible:''}</div>
-          ${d.description?`<div style="font-size:12px;color:var(--text2);margin-top:3px">${d.description}</div>`:''}
-          ${d.resolution?`<div style="font-size:12px;color:var(--green-text);margin-top:3px"><i class="ti ti-check" style="font-size:11px"></i> ${d.resolution}</div>`:''}
+  if(!list.length){el.innerHTML='<div style="font-size:13px;color:var(--text3);padding:1rem 0">Nenhum desenquadramento.</div>';return;}
+  const groups=_groupByMonth(list,'date');
+  el.innerHTML=groups.map(g=>{
+    const items=g.items.map(d=>{const sv=SEV[d.severity]||SEV.médio,os=OSTATUS[d.status]||OSTATUS.aberto;
+      return`<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.25rem;margin-bottom:10px">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:6px">
+          <div>
+            <div style="font-size:14px;font-weight:500">${d.title} <span class="tag" style="background:${sv.bg};color:${sv.text}">${d.severity}</span></div>
+            <div style="font-size:11px;color:var(--text3)">${fmtFull(d.date)}${d.responsible?' · Resp: '+d.responsible:''}</div>
+            ${d.description?`<div style="font-size:12px;color:var(--text2);margin-top:3px">${d.description}</div>`:''}
+            ${d.resolution?`<div style="font-size:12px;color:var(--green-text);margin-top:3px"><i class="ti ti-check" style="font-size:11px"></i> ${d.resolution}</div>`:''}
+          </div>
+          <div style="display:flex;gap:6px;align-items:center;flex-shrink:0">
+            <span class="tag" style="background:${os.bg};color:${os.text}">${d.status}</span>
+            <button onclick="openROModal('desenq',${d.id})" style="background:none;border:none;cursor:pointer;color:var(--text2);font-size:14px"><i class="ti ti-pencil"></i></button>
+            <button onclick="delROItem('desenq',${d.id})" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:14px"><i class="ti ti-trash"></i></button>
+          </div>
         </div>
-        <div style="display:flex;gap:6px;align-items:center;flex-shrink:0">
-          <span class="tag" style="background:${os.bg};color:${os.text}">${d.status}</span>
-          <button onclick="openROModal('desenq',${d.id})" style="background:none;border:none;cursor:pointer;color:var(--text2);font-size:14px"><i class="ti ti-pencil"></i></button>
-          <button onclick="delROItem('desenq',${d.id})" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:14px"><i class="ti ti-trash"></i></button>
-        </div>
-      </div>
-    </div>`;}).join(''):'<div style="font-size:13px;color:var(--text3);padding:1rem 0">Nenhum desenquadramento.</div>';
+      </div>`;}).join('');
+    return`<div style="margin-bottom:1.5rem"><div style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border)">${g.label} <span style="font-weight:400;color:var(--text3)">(${g.items.length})</span></div>${items}</div>`;
+  }).join('');
 }
 
 function _renderROIndicators(){
@@ -1840,6 +1904,24 @@ function renderROCharts(){
   // Barras indicadores
 }
 
+function _groupByMonth(list, dateField){
+  const months=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  const groups={};
+  list.forEach(item=>{
+    const d=item[dateField]||'';
+    const key=d?d.substr(0,7):'sem-data';
+    if(!groups[key])groups[key]=[];
+    groups[key].push(item);
+  });
+  const keys=Object.keys(groups).sort().reverse();
+  return keys.map(k=>{
+    let label;
+    if(k==='sem-data')label='Sem data';
+    else{const[y,m]=k.split('-');label=months[parseInt(m)-1]+' de '+y;}
+    return {key:k,label,items:groups[k]};
+  });
+}
+
 function _renderRiskMatrix(){
   const el=document.getElementById('ro-risk-matrix');
   if(!el)return;
@@ -1897,6 +1979,7 @@ async function loadAll(){
     ['risk_incidents','?order=date.asc'],
     ['risk_desenquadramentos','?order=date.asc'],
     ['risk_indicators','?order=id.asc'],
+    ['brainstorm_notes','?order=id.desc'],
   ];
   try{
     const results=await Promise.all(TABLES.map(([t,q])=>get(t,q).catch(e=>{
@@ -1913,8 +1996,9 @@ async function loadAll(){
     }
     const [ps,comps,sessions,bts,comments,persp,ativs,pdis,milestones,fb,cargo,
            tps,tpComps,tpContacts,tpSlas,tpEvals,tpRisks,
-           risks,incidents,desenqs,indicators]=results;
+           risks,incidents,desenqs,indicators,notes]=results;
 
+    brainstormNotes=notes||[];
     people=(ps||[]).map(p=>({...p,
       _comps:(comps||[]).filter(x=>x.person_id===p.id),
       _sessions:(sessions||[]).filter(x=>x.person_id===p.id),
@@ -1951,6 +2035,107 @@ async function loadAll(){
     console.error(e);
   }
   loading(false);
+}
+
+// ══════════════════════════════════════════════════════════
+//  SETOR BRAINSTORM — notas estilo post-it
+// ══════════════════════════════════════════════════════════
+const BS_COLORS=[
+  {bg:'#FAEEDA',tag:'#FAC775',tagtext:'#412402',title:'#412402',body:'#633806',foot:'#854F0B'},
+  {bg:'#E1F5EE',tag:'#9FE1CB',tagtext:'#04342C',title:'#04342C',body:'#085041',foot:'#0F6E56'},
+  {bg:'#FCEBEB',tag:'#F7C1C1',tagtext:'#501313',title:'#501313',body:'#791F1F',foot:'#A32D2D'},
+  {bg:'#EEEDFE',tag:'#CECBF6',tagtext:'#26215C',title:'#26215C',body:'#3C3489',foot:'#534AB7'},
+  {bg:'#FBEAF0',tag:'#F4C0D1',tagtext:'#4B1528',title:'#4B1528',body:'#72243E',foot:'#993556'},
+  {bg:'#EAF3DE',tag:'#C0DD97',tagtext:'#173404',title:'#173404',body:'#27500A',foot:'#3B6D11'},
+  {bg:'#E6F1FB',tag:'#B5D4F4',tagtext:'#042C53',title:'#042C53',body:'#0C447C',foot:'#185FA5'},
+  {bg:'#FAECE7',tag:'#F5C4B3',tagtext:'#4A1B0C',title:'#4A1B0C',body:'#712B13',foot:'#993C1D'},
+  {bg:'#F1EFE8',tag:'#D3D1C7',tagtext:'#2C2C2A',title:'#2C2C2A',body:'#444441',foot:'#5F5E5A'},
+];
+function _bsColorForCategory(cat){
+  if(!cat)return BS_COLORS[8];
+  let h=0;for(let i=0;i<cat.length;i++)h=(h*31+cat.charCodeAt(i))>>>0;
+  return BS_COLORS[h%BS_COLORS.length];
+}
+function renderBrainstorm(){
+  const search=(document.getElementById('bs-search')||{value:''}).value.toLowerCase();
+  const catF=(document.getElementById('bs-filter-cat')||{value:''}).value;
+  const subF=(document.getElementById('bs-filter-subcat')||{value:''}).value;
+  const cats=[...new Set(brainstormNotes.map(n=>n.category).filter(Boolean))].sort();
+  const subcats=[...new Set(brainstormNotes.map(n=>n.subcategory).filter(Boolean))].sort();
+  const catSel=document.getElementById('bs-filter-cat'),curCat=catSel.value;
+  catSel.innerHTML='<option value="">Todas as categorias</option>'+cats.map(c=>`<option value="${c}"${c===curCat?' selected':''}>${c}</option>`).join('');
+  const subSel=document.getElementById('bs-filter-subcat'),curSub=subSel.value;
+  subSel.innerHTML='<option value="">Todas as subcategorias</option>'+subcats.map(c=>`<option value="${c}"${c===curSub?' selected':''}>${c}</option>`).join('');
+  let list=brainstormNotes.filter(n=>{
+    if(search&&!((n.title||'')+' '+(n.body||'')).toLowerCase().includes(search))return false;
+    if(catF&&n.category!==catF)return false;
+    if(subF&&n.subcategory!==subF)return false;
+    return true;
+  });
+  const grid=document.getElementById('brainstorm-grid');
+  if(!list.length){grid.innerHTML='<div style="grid-column:1/-1;font-size:13px;color:var(--text3);padding:2rem 0;text-align:center">Nenhuma nota. Clique em "Nova nota".</div>';return;}
+  grid.innerHTML=list.map(n=>{
+    const c=_bsColorForCategory(n.category);
+    return`<div class="bs-card" style="background:${c.bg}">
+      <div class="bs-actions" style="color:${c.foot}">
+        <i class="ti ti-pencil" onclick="openNoteModal(${n.id})"></i>
+        <i class="ti ti-trash" onclick="delNote(${n.id})"></i>
+      </div>
+      <div class="bs-cats">
+        ${n.category?`<span class="bs-tag" style="background:${c.tag};color:${c.tagtext}">${n.category}</span>`:''}
+        ${n.subcategory?`<span class="bs-tag" style="background:#fff;color:${c.foot}">${n.subcategory}</span>`:''}
+      </div>
+      ${n.title?`<div class="bs-title" style="color:${c.title}">${n.title}</div>`:''}
+      <div class="bs-body" style="color:${c.body}">${n.body||''}</div>
+      <div class="bs-foot" style="color:${c.foot}">${fmtFull(n.created_at?n.created_at.split('T')[0]:'')}</div>
+    </div>`;
+  }).join('');
+}
+function openNoteModal(id){
+  editingNoteId=id||null;
+  const cats=[...new Set(brainstormNotes.map(n=>n.category).filter(Boolean))];
+  const subcats=[...new Set(brainstormNotes.map(n=>n.subcategory).filter(Boolean))];
+  document.getElementById('bs-cat-list').innerHTML=cats.map(c=>`<option value="${c}">`).join('');
+  document.getElementById('bs-subcat-list').innerHTML=subcats.map(c=>`<option value="${c}">`).join('');
+  if(id){
+    const n=brainstormNotes.find(x=>x.id===id);if(!n)return;
+    document.getElementById('note-modal-title').textContent='Editar nota';
+    document.getElementById('note-title').value=n.title||'';
+    document.getElementById('note-category').value=n.category||'';
+    document.getElementById('note-subcategory').value=n.subcategory||'';
+    document.getElementById('note-body').value=n.body||'';
+  }else{
+    document.getElementById('note-modal-title').textContent='Nova nota';
+    ['note-title','note-category','note-subcategory','note-body'].forEach(i=>document.getElementById(i).value='');
+  }
+  document.getElementById('note-modal').classList.add('vis');
+}
+function closeNoteModal(){document.getElementById('note-modal').classList.remove('vis');}
+function saveNote(){
+  const title=document.getElementById('note-title').value.trim();
+  const category=document.getElementById('note-category').value.trim();
+  const subcategory=document.getElementById('note-subcategory').value.trim();
+  const body=document.getElementById('note-body').value.trim();
+  if(!title&&!body){showToast('Adicione um título ou conteúdo',true);return;}
+  if(editingNoteId){
+    patch('brainstorm_notes',{title,category,subcategory,body},`?id=eq.${editingNoteId}`).then(()=>{
+      const n=brainstormNotes.find(x=>x.id===editingNoteId);
+      if(n){n.title=title;n.category=category;n.subcategory=subcategory;n.body=body;}
+      closeNoteModal();renderBrainstorm();showToast('Nota atualizada');
+    }).catch(e=>showToast('Erro: '+e.message,true));
+  }else{
+    post('brainstorm_notes',{title,category,subcategory,body}).then(r=>{
+      brainstormNotes.unshift(r[0]);
+      closeNoteModal();renderBrainstorm();showToast('Nota criada');
+    }).catch(e=>showToast('Erro: '+e.message,true));
+  }
+}
+function delNote(id){
+  if(!confirm('Excluir esta nota?'))return;
+  del('brainstorm_notes',`?id=eq.${id}`).then(()=>{
+    brainstormNotes=brainstormNotes.filter(x=>x.id!==id);
+    renderBrainstorm();showToast('Nota excluída');
+  }).catch(e=>showToast('Erro',true));
 }
 
 loadAll();
