@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -1065,7 +1064,7 @@ async function save1on1(){
   const date=document.getElementById('f-date').value,score=parseFloat(document.getElementById('f-score').value)||7;
   const notes=document.getElementById('f-notes').value.trim()||'(sem anotações)',tag=document.getElementById('f-tag').value;
   try{
-    const r=await post('sessions',{person_id:pid,date,mood:parseInt(score)||5,actions:notes,user_id:'00000000-0000-0000-0000-000000000000',pessoa_id:'00000000-0000-0000-0000-000000000000'});
+    const r=await post('session_1on1',{person_id:pid,date,score,notes,tag});
     const p=people.find(x=>x.id===pid);p._sessions.push(r[0]);
     closeForm1on1();renderCards();
     if(gpActiveId===pid){renderHistory(p);if(document.getElementById('t-evo').classList.contains('on'))renderEvo(p);}
@@ -1075,7 +1074,7 @@ async function save1on1(){
 async function deleteSession(id,pid){
   if(!confirm('Excluir esta 1:1?'))return;
   try{
-    await del('sessions',`?id=eq.${id}`);
+    await del('session_1on1',`?id=eq.${id}`);
     const p=people.find(x=>x.id===pid);p._sessions=p._sessions.filter(x=>x.id!==id);
     renderHistory(p);renderCards();showToast('1:1 excluída');
   }catch(e){showToast('Erro',true);}
@@ -1128,7 +1127,7 @@ function deletePerson(){
   const pdiIds=((p._pdis)||[]).map(x=>x.id);
   const delAll=()=>{
     const queries=[
-      (()=>{const ids=(p._sessions||[]).map(s=>s.id).filter(Boolean);return ids.length?del('sessions',`?id=in.(${ids.join(',')})`):Promise.resolve();})(),
+      (()=>{const ids=(p._sessions||[]).map(s=>s.id).filter(Boolean);return ids.length?del('session_1on1',`?id=in.(${ids.join(',')})`):Promise.resolve();})(),
       del('competencies',`?person_id=eq.${pid}`),
       del('bottlenecks',`?person_id=eq.${pid}`),
       del('comments',`?person_id=eq.${pid}`),
@@ -1879,7 +1878,7 @@ async function loadAll(){
   const TABLES=[
     ['people','?order=id.asc'],
     ['competencies','?order=id.asc'],
-    ['sessions','?order=date.asc'],
+    ['session_1on1','?order=date.asc'],
     ['bottlenecks','?order=id.asc'],
     ['comments','?order=id.asc'],
     ['perspectiva','?order=id.asc'],
