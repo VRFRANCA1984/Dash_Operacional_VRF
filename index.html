@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -801,6 +800,7 @@ input[type=range]::-moz-range-progress{background:var(--thumb-color,#3b82f6);hei
       <div class="form-field"><label>Starting Date</label><input type="date" id="todo-start"/></div>
       <div class="form-field"><label>Expected Date</label><input type="date" id="todo-expected"/></div>
       <div class="form-field"><label>Settlement Date</label><input type="date" id="todo-settlement"/></div>
+      <div class="form-field form-field-full"><label>Ongoing</label><textarea id="todo-ongoing" rows="3" placeholder="Status atual, próximos passos, observações..."></textarea></div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-primary" onclick="saveTodo()"><i class="ti ti-check"></i>Salvar</button>
@@ -2248,6 +2248,8 @@ function _todoFmtDate(d){
   const[y,m,day]=d.split('-');
   return day+'/'+m+'/'+y.substr(2);
 }
+let _todoConcludedOpen=false;
+function toggleTodoConcluded(){_todoConcludedOpen=!_todoConcludedOpen;renderTodos();}
 function renderTodos(){
   const search=(document.getElementById('todo-search')||{value:''}).value.toLowerCase();
   const stageF=(document.getElementById('todo-filter-stage')||{value:''}).value;
@@ -2261,10 +2263,8 @@ function renderTodos(){
   const wrap=document.getElementById('todo-table-wrap');
   if(!list.length){wrap.innerHTML='<div style="font-size:13px;color:var(--text3);padding:2rem 0;text-align:center">Nenhuma tarefa. Clique em "Nova tarefa".</div>';return;}
 
-  // Agrupar por bucket
-  const groups={};
-  list.forEach(t=>{const k=t.bucket||'Sem bucket';(groups[k]=groups[k]||[]).push(t);});
-  const bucketKeys=Object.keys(groups).sort((a,b)=>a==='Sem bucket'?1:b==='Sem bucket'?-1:a.localeCompare(b));
+  const ongoing=list.filter(t=>!t.settlement_date);
+  const concluded=list.filter(t=>t.settlement_date);
 
   const rowHtml=t=>{
     const sg=TODO_STAGE_COLORS[t.stage]||TODO_STAGE_COLORS['Starting Stage'];
@@ -2279,6 +2279,7 @@ function renderTodos(){
       <td>${_todoFmtDate(t.expected_date)}</td>
       <td>${_todoFmtDate(t.settlement_date)}</td>
       <td>${_todoDuration(t)}</td>
+      <td style="font-size:12px;color:var(--text2);max-width:220px;white-space:normal">${t.ongoing||''}</td>
       <td class="todo-actions">
         <i class="ti ti-pencil" onclick="openTodoModal(${t.id})"></i>
         <i class="ti ti-trash" onclick="delTodo(${t.id})"></i>
@@ -2286,14 +2287,37 @@ function renderTodos(){
     </tr>`;
   };
 
-  let html='<table class="todo-table"><thead><tr>'+
-    '<th>Name</th><th>Stage</th><th>Energy</th><th>Priority</th><th>Starting Date</th><th>Expected Date</th><th>Settlement Date</th><th>Duration</th><th></th>'+
-    '</tr></thead><tbody>';
-  bucketKeys.forEach(bk=>{
-    html+=`<tr class="todo-bucket-row"><td colspan="9">${bk} <span style="font-weight:400;color:var(--text3)">(${groups[bk].length})</span></td></tr>`;
-    html+=groups[bk].map(rowHtml).join('');
-  });
-  html+='</tbody></table>';
+  const theadHtml='<thead><tr>'+
+    '<th>Name</th><th>Stage</th><th>Energy</th><th>Priority</th><th>Starting Date</th><th>Expected Date</th><th>Settlement Date</th><th>Duration</th><th>Ongoing</th><th></th>'+
+    '</tr></thead>';
+
+  // Em andamento — agrupado por bucket
+  const groups={};
+  ongoing.forEach(t=>{const k=t.bucket||'Sem bucket';(groups[k]=groups[k]||[]).push(t);});
+  const bucketKeys=Object.keys(groups).sort((a,b)=>a==='Sem bucket'?1:b==='Sem bucket'?-1:a.localeCompare(b));
+
+  let html='';
+  if(ongoing.length){
+    html+='<div style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Em andamento <span style="font-weight:400;color:var(--text3)">('+ongoing.length+')</span></div>';
+    html+='<table class="todo-table">'+theadHtml+'<tbody>';
+    bucketKeys.forEach(bk=>{
+      html+=`<tr class="todo-bucket-row"><td colspan="10">${bk} <span style="font-weight:400;color:var(--text3)">(${groups[bk].length})</span></td></tr>`;
+      html+=groups[bk].map(rowHtml).join('');
+    });
+    html+='</tbody></table>';
+  }else{
+    html+='<div style="font-size:13px;color:var(--text3);padding:1rem 0">Nenhuma tarefa em andamento.</div>';
+  }
+
+  // Concluídas — colapsável
+  if(concluded.length){
+    const arrow=_todoConcludedOpen?'ti-chevron-down':'ti-chevron-right';
+    html+=`<div onclick="toggleTodoConcluded()" style="display:flex;align-items:center;gap:6px;cursor:pointer;margin-top:1.5rem;margin-bottom:8px;font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.06em"><i class="ti ${arrow}"></i>Concluídas <span style="font-weight:400;color:var(--text3)">(${concluded.length})</span></div>`;
+    if(_todoConcludedOpen){
+      html+='<table class="todo-table">'+theadHtml+'<tbody>'+concluded.map(rowHtml).join('')+'</tbody></table>';
+    }
+  }
+
   wrap.innerHTML=html;
 }
 function openTodoModal(id){
@@ -2311,6 +2335,7 @@ function openTodoModal(id){
     document.getElementById('todo-start').value=t.start_date||'';
     document.getElementById('todo-expected').value=t.expected_date||'';
     document.getElementById('todo-settlement').value=t.settlement_date||'';
+    document.getElementById('todo-ongoing').value=t.ongoing||'';
   }else{
     document.getElementById('todo-modal-title').textContent='Nova tarefa';
     document.getElementById('todo-name').value='';
@@ -2321,6 +2346,7 @@ function openTodoModal(id){
     document.getElementById('todo-start').value='';
     document.getElementById('todo-expected').value='';
     document.getElementById('todo-settlement').value='';
+    document.getElementById('todo-ongoing').value='';
   }
   document.getElementById('todo-modal').classList.add('vis');
 }
@@ -2337,6 +2363,7 @@ function saveTodo(){
     start_date:document.getElementById('todo-start').value||null,
     expected_date:document.getElementById('todo-expected').value||null,
     settlement_date:document.getElementById('todo-settlement').value||null,
+    ongoing:document.getElementById('todo-ongoing').value.trim()||null,
   };
   if(editingTodoId){
     patch('todos',payload,`?id=eq.${editingTodoId}`).then(()=>{
