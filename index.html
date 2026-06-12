@@ -219,6 +219,16 @@ input[type=range]::-moz-range-progress{background:var(--thumb-color,#3b82f6);hei
 .bs-actions{position:absolute;top:8px;right:8px;display:flex;gap:6px;opacity:0;transition:opacity .12s}
 .bs-card:hover .bs-actions{opacity:1}
 .bs-actions i{font-size:13px;cursor:pointer}
+.todo-table{width:100%;border-collapse:collapse;font-size:13px}
+.todo-table th{font-size:11px;color:var(--text2);font-weight:500;padding:8px 12px;border-bottom:1px solid var(--border);text-align:left;white-space:nowrap}
+.todo-table td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:middle}
+.todo-table tr:hover td{background:var(--surface2)}
+.todo-bucket-row td{padding:10px 12px 6px;font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;border-bottom:none;background:transparent!important}
+.todo-pill{font-size:11px;padding:3px 10px;border-radius:20px;font-weight:500;white-space:nowrap;display:inline-block}
+.todo-name{font-weight:500;color:var(--text)}
+.todo-actions{display:flex;gap:8px;align-items:center}
+.todo-actions i{font-size:14px;cursor:pointer;color:var(--text3)}
+.todo-actions i:hover{color:var(--text)}
 .mob-menu-btn{display:none;position:fixed;top:12px;left:12px;z-index:60;background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);padding:8px;cursor:pointer;align-items:center;justify-content:center}
 @media(max-width:768px){.sidebar{transform:translateX(-100%);transition:transform .2s}.sidebar.open{transform:none}.main{margin-left:0}.mob-menu-btn{display:flex}}
 </style>
@@ -236,6 +246,7 @@ input[type=range]::-moz-range-progress{background:var(--thumb-color,#3b82f6);hei
     <button class="nav-item" id="nav-ro-desenq" onclick="showROSector('desenq')"><i class="ti ti-ban"></i>Desenquadramentos</button>
     <button class="nav-item" id="nav-ro-indicators" onclick="showROSector('indicators')"><i class="ti ti-trending-up"></i>Indicadores</button>
     <button class="nav-item" id="nav-brainstorm" onclick="showSector('brainstorm')"><i class="ti ti-bulb"></i>Brainstorm</button>
+    <button class="nav-item" id="nav-todo" onclick="showSector('todo')"><i class="ti ti-checklist"></i>To Do</button>
     <div class="nav-section" style="margin-top:1rem">Ações rápidas</div>
     <button class="nav-item" onclick="showSector('gp');setTimeout(()=>openNew1on1(),200)"><i class="ti ti-plus"></i>Nova 1:1</button>
     <button class="nav-item" onclick="showROSector('risks');setTimeout(()=>openROModal('risk'),200)"><i class="ti ti-alert-triangle"></i>Novo risco</button>
@@ -642,6 +653,35 @@ input[type=range]::-moz-range-progress{background:var(--thumb-color,#3b82f6);hei
   <div id="brainstorm-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px"></div>
 </div>
 </div>
+
+<div class="sector" id="sector-todo">
+<div class="sector-body">
+  <div class="page-header">
+    <div class="page-header-left"><h2>To Do</h2><p>Tarefas e acompanhamento</p></div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="openTodoModal()"><i class="ti ti-plus"></i>Nova tarefa</button>
+    </div>
+  </div>
+  <div class="filter-bar">
+    <div class="search-wrap"><i class="ti ti-search"></i><input type="text" id="todo-search" placeholder="Buscar tarefa..." oninput="renderTodos()"/></div>
+    <select class="filter-select" id="todo-filter-stage" onchange="renderTodos()">
+      <option value="">Todos os estágios</option>
+      <option value="Starting Stage">Starting Stage</option>
+      <option value="Monitoring Stage">Monitoring Stage</option>
+      <option value="Advanced Stage">Advanced Stage</option>
+      <option value="Critical Stage">Critical Stage</option>
+    </select>
+    <select class="filter-select" id="todo-filter-priority" onchange="renderTodos()">
+      <option value="">Todas as prioridades</option>
+      <option value="Low">Low</option>
+      <option value="Medium">Medium</option>
+      <option value="Important">Important</option>
+      <option value="Critical">Critical</option>
+    </select>
+  </div>
+  <div id="todo-table-wrap" style="overflow-x:auto"></div>
+</div>
+</div>
 </div><!-- /main -->
 
 <!-- MODAIS GP -->
@@ -735,6 +775,39 @@ input[type=range]::-moz-range-progress{background:var(--thumb-color,#3b82f6);hei
     </div>
   </div>
 </div>
+<div class="modal-backdrop" id="todo-modal">
+  <div class="modal" style="max-width:560px">
+    <div class="modal-title" id="todo-modal-title">Nova tarefa</div>
+    <div class="form-grid">
+      <div class="form-field form-field-full"><label>Nome</label><input type="text" id="todo-name" placeholder="Nome da tarefa"/></div>
+      <div class="form-field"><label>Stage</label><select id="todo-stage">
+        <option value="Starting Stage">Starting Stage</option>
+        <option value="Monitoring Stage">Monitoring Stage</option>
+        <option value="Advanced Stage">Advanced Stage</option>
+        <option value="Critical Stage">Critical Stage</option>
+      </select></div>
+      <div class="form-field"><label>Energy</label><select id="todo-energy">
+        <option value="Low Energy">Low Energy</option>
+        <option value="Medium Energy">Medium Energy</option>
+        <option value="High Energy">High Energy</option>
+      </select></div>
+      <div class="form-field"><label>Priority</label><select id="todo-priority">
+        <option value="Low">Low</option>
+        <option value="Medium">Medium</option>
+        <option value="Important">Important</option>
+        <option value="Critical">Critical</option>
+      </select></div>
+      <div class="form-field"><label>Bucket</label><input type="text" id="todo-bucket" list="todo-bucket-list" placeholder="ex: Q3, Operações..."/><datalist id="todo-bucket-list"></datalist></div>
+      <div class="form-field"><label>Starting Date</label><input type="date" id="todo-start"/></div>
+      <div class="form-field"><label>Expected Date</label><input type="date" id="todo-expected"/></div>
+      <div class="form-field"><label>Settlement Date</label><input type="date" id="todo-settlement"/></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" onclick="saveTodo()"><i class="ti ti-check"></i>Salvar</button>
+      <button class="btn" onclick="closeTodoModal()">Cancelar</button>
+    </div>
+  </div>
+</div>
 <div class="toast" id="toast"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
@@ -804,11 +877,11 @@ function syncOk(){['sync-dot','sync-dot2'].forEach(id=>{const d=document.getElem
 
 // ── NAVEGAÇÃO ─────────────────────────────────────────────
 function showROSector(sub){
-  ['gp','tp','ro-risks','ro-incidents','ro-desenq','ro-indicators','brainstorm'].forEach(k=>{
+  ['gp','tp','ro-risks','ro-incidents','ro-desenq','ro-indicators','brainstorm','todo'].forEach(k=>{
     const el=document.getElementById('sector-'+k);if(el)el.classList.remove('active');
   });
   const el=document.getElementById('sector-ro-'+sub);if(el)el.classList.add('active');
-  ['gp','tp','brainstorm'].forEach(k=>{const n=document.getElementById('nav-'+k);if(n)n.classList.remove('active');});
+  ['gp','tp','brainstorm','todo'].forEach(k=>{const n=document.getElementById('nav-'+k);if(n)n.classList.remove('active');});
   ['risks','incidents','desenq','indicators'].forEach(v=>{
     const n=document.getElementById('nav-ro-'+v);if(n)n.classList.remove('active');
   });
@@ -816,16 +889,17 @@ function showROSector(sub){
   renderROSub(sub);
 }
 function showSector(s){
-  ['gp','tp','ro-risks','ro-incidents','ro-desenq','ro-indicators','brainstorm'].forEach(k=>{
+  ['gp','tp','ro-risks','ro-incidents','ro-desenq','ro-indicators','brainstorm','todo'].forEach(k=>{
     const el=document.getElementById('sector-'+k);if(el)el.classList.remove('active');
   });
   const el=document.getElementById('sector-'+s);if(el)el.classList.add('active');
-  ['gp','tp','brainstorm'].forEach(k=>{const n=document.getElementById('nav-'+k);if(n)n.classList.remove('active');});
+  ['gp','tp','brainstorm','todo'].forEach(k=>{const n=document.getElementById('nav-'+k);if(n)n.classList.remove('active');});
   ['risks','incidents','desenq','indicators'].forEach(v=>{
     const n=document.getElementById('nav-ro-'+v);if(n)n.classList.remove('active');
   });
-  if(s==='gp'||s==='tp'||s==='brainstorm'){const n=document.getElementById('nav-'+s);if(n)n.classList.add('active');}
+  if(s==='gp'||s==='tp'||s==='brainstorm'||s==='todo'){const n=document.getElementById('nav-'+s);if(n)n.classList.add('active');}
   if(s==='brainstorm')renderBrainstorm();
+  if(s==='todo')renderTodos();
 }
 
 // ══════════════════════════════════════════════════════════
@@ -1502,6 +1576,7 @@ function exportTPPDF(){
 // ══════════════════════════════════════════════════════════
 let roRisks=[], roIncidents=[], roDesenqs=[], roIndicators=[];
 let brainstormNotes=[], editingNoteId=null;
+let todoItems=[], editingTodoId=null;
 const SEV={crítico:{bg:'#fdf2f8',text:'#701a75'},alto:{bg:'#fef2f2',text:'#b91c1c'},'médio':{bg:'#fffbeb',text:'#92400e'},baixo:{bg:'#f0fdf4',text:'#15803d'}};
 const OSTATUS={encerrado:{bg:'#f3f4f6',text:'#6b7280'},'em mitigação':{bg:'#fffbeb',text:'#92400e'},aberto:{bg:'#fef2f2',text:'#b91c1c'},monitorado:{bg:'#eff4ff',text:'#1d4ed8'},'em resolução':{bg:'#fffbeb',text:'#92400e'},resolvido:{bg:'#f0fdf4',text:'#15803d'}};
 const IND_STATUS={ok:{bg:'#f0fdf4',text:'#15803d'},'atenção':{bg:'#fffbeb',text:'#92400e'},crítico:{bg:'#fef2f2',text:'#b91c1c'}};
@@ -1980,6 +2055,7 @@ async function loadAll(){
     ['risk_desenquadramentos','?order=date.asc'],
     ['risk_indicators','?order=id.asc'],
     ['brainstorm_notes','?order=id.desc'],
+    ['todos','?order=id.desc'],
   ];
   try{
     const results=await Promise.all(TABLES.map(([t,q])=>get(t,q).catch(e=>{
@@ -1996,9 +2072,10 @@ async function loadAll(){
     }
     const [ps,comps,sessions,bts,comments,persp,ativs,pdis,milestones,fb,cargo,
            tps,tpComps,tpContacts,tpSlas,tpEvals,tpRisks,
-           risks,incidents,desenqs,indicators,notes]=results;
+           risks,incidents,desenqs,indicators,notes,todos]=results;
 
     brainstormNotes=notes||[];
+    todoItems=todos||[];
     people=(ps||[]).map(p=>({...p,
       _comps:(comps||[]).filter(x=>x.person_id===p.id),
       _sessions:(sessions||[]).filter(x=>x.person_id===p.id),
@@ -2135,6 +2212,150 @@ function delNote(id){
   del('brainstorm_notes',`?id=eq.${id}`).then(()=>{
     brainstormNotes=brainstormNotes.filter(x=>x.id!==id);
     renderBrainstorm();showToast('Nota excluída');
+  }).catch(e=>showToast('Erro',true));
+}
+
+// ══════════════════════════════════════════════════════════
+//  SETOR TO DO — tabela estilo Planner
+// ══════════════════════════════════════════════════════════
+const TODO_STAGE_COLORS={
+  'Starting Stage':{bg:'#eff6ff',text:'#1d4ed8'},
+  'Monitoring Stage':{bg:'#fffbeb',text:'#92400e'},
+  'Advanced Stage':{bg:'#f0fdf4',text:'#15803d'},
+  'Critical Stage':{bg:'#fef2f2',text:'#b91c1c'},
+};
+const TODO_ENERGY_COLORS={
+  'Low Energy':{bg:'#f0fdf4',text:'#15803d'},
+  'Medium Energy':{bg:'#fffbeb',text:'#92400e'},
+  'High Energy':{bg:'#fef2f2',text:'#b91c1c'},
+};
+const TODO_PRIORITY_COLORS={
+  'Low':{bg:'#f3f4f6',text:'#6b7280'},
+  'Medium':{bg:'#eff6ff',text:'#1d4ed8'},
+  'Important':{bg:'#fff7ed',text:'#c2410c'},
+  'Critical':{bg:'#fef2f2',text:'#b91c1c'},
+};
+function _todoDuration(t){
+  const start=t.start_date,end=t.settlement_date||t.expected_date;
+  if(!start||!end)return '—';
+  const d1=new Date(start),d2=new Date(end);
+  const days=Math.round((d2-d1)/86400000);
+  if(isNaN(days))return '—';
+  return days+(t.settlement_date?'':' (prev.)')+' dia'+(Math.abs(days)===1?'':'s');
+}
+function _todoFmtDate(d){
+  if(!d)return '—';
+  const[y,m,day]=d.split('-');
+  return day+'/'+m+'/'+y.substr(2);
+}
+function renderTodos(){
+  const search=(document.getElementById('todo-search')||{value:''}).value.toLowerCase();
+  const stageF=(document.getElementById('todo-filter-stage')||{value:''}).value;
+  const prioF=(document.getElementById('todo-filter-priority')||{value:''}).value;
+  let list=todoItems.filter(t=>{
+    if(search&&!(t.name||'').toLowerCase().includes(search))return false;
+    if(stageF&&t.stage!==stageF)return false;
+    if(prioF&&t.priority!==prioF)return false;
+    return true;
+  });
+  const wrap=document.getElementById('todo-table-wrap');
+  if(!list.length){wrap.innerHTML='<div style="font-size:13px;color:var(--text3);padding:2rem 0;text-align:center">Nenhuma tarefa. Clique em "Nova tarefa".</div>';return;}
+
+  // Agrupar por bucket
+  const groups={};
+  list.forEach(t=>{const k=t.bucket||'Sem bucket';(groups[k]=groups[k]||[]).push(t);});
+  const bucketKeys=Object.keys(groups).sort((a,b)=>a==='Sem bucket'?1:b==='Sem bucket'?-1:a.localeCompare(b));
+
+  const rowHtml=t=>{
+    const sg=TODO_STAGE_COLORS[t.stage]||TODO_STAGE_COLORS['Starting Stage'];
+    const en=TODO_ENERGY_COLORS[t.energy]||TODO_ENERGY_COLORS['Medium Energy'];
+    const pr=TODO_PRIORITY_COLORS[t.priority]||TODO_PRIORITY_COLORS['Medium'];
+    return`<tr>
+      <td class="todo-name">${t.name||''}</td>
+      <td><span class="todo-pill" style="background:${sg.bg};color:${sg.text}">${t.stage||''}</span></td>
+      <td><span class="todo-pill" style="background:${en.bg};color:${en.text}">${t.energy||''}</span></td>
+      <td><span class="todo-pill" style="background:${pr.bg};color:${pr.text}">${t.priority||''}</span></td>
+      <td>${_todoFmtDate(t.start_date)}</td>
+      <td>${_todoFmtDate(t.expected_date)}</td>
+      <td>${_todoFmtDate(t.settlement_date)}</td>
+      <td>${_todoDuration(t)}</td>
+      <td class="todo-actions">
+        <i class="ti ti-pencil" onclick="openTodoModal(${t.id})"></i>
+        <i class="ti ti-trash" onclick="delTodo(${t.id})"></i>
+      </td>
+    </tr>`;
+  };
+
+  let html='<table class="todo-table"><thead><tr>'+
+    '<th>Name</th><th>Stage</th><th>Energy</th><th>Priority</th><th>Starting Date</th><th>Expected Date</th><th>Settlement Date</th><th>Duration</th><th></th>'+
+    '</tr></thead><tbody>';
+  bucketKeys.forEach(bk=>{
+    html+=`<tr class="todo-bucket-row"><td colspan="9">${bk} <span style="font-weight:400;color:var(--text3)">(${groups[bk].length})</span></td></tr>`;
+    html+=groups[bk].map(rowHtml).join('');
+  });
+  html+='</tbody></table>';
+  wrap.innerHTML=html;
+}
+function openTodoModal(id){
+  editingTodoId=id||null;
+  const buckets=[...new Set(todoItems.map(t=>t.bucket).filter(Boolean))];
+  document.getElementById('todo-bucket-list').innerHTML=buckets.map(b=>`<option value="${b}">`).join('');
+  if(id){
+    const t=todoItems.find(x=>x.id===id);if(!t)return;
+    document.getElementById('todo-modal-title').textContent='Editar tarefa';
+    document.getElementById('todo-name').value=t.name||'';
+    document.getElementById('todo-stage').value=t.stage||'Starting Stage';
+    document.getElementById('todo-energy').value=t.energy||'Medium Energy';
+    document.getElementById('todo-priority').value=t.priority||'Medium';
+    document.getElementById('todo-bucket').value=t.bucket||'';
+    document.getElementById('todo-start').value=t.start_date||'';
+    document.getElementById('todo-expected').value=t.expected_date||'';
+    document.getElementById('todo-settlement').value=t.settlement_date||'';
+  }else{
+    document.getElementById('todo-modal-title').textContent='Nova tarefa';
+    document.getElementById('todo-name').value='';
+    document.getElementById('todo-stage').value='Starting Stage';
+    document.getElementById('todo-energy').value='Medium Energy';
+    document.getElementById('todo-priority').value='Medium';
+    document.getElementById('todo-bucket').value='';
+    document.getElementById('todo-start').value='';
+    document.getElementById('todo-expected').value='';
+    document.getElementById('todo-settlement').value='';
+  }
+  document.getElementById('todo-modal').classList.add('vis');
+}
+function closeTodoModal(){document.getElementById('todo-modal').classList.remove('vis');}
+function saveTodo(){
+  const name=document.getElementById('todo-name').value.trim();
+  if(!name){showToast('Informe o nome da tarefa',true);return;}
+  const payload={
+    name,
+    stage:document.getElementById('todo-stage').value,
+    energy:document.getElementById('todo-energy').value,
+    priority:document.getElementById('todo-priority').value,
+    bucket:document.getElementById('todo-bucket').value.trim(),
+    start_date:document.getElementById('todo-start').value||null,
+    expected_date:document.getElementById('todo-expected').value||null,
+    settlement_date:document.getElementById('todo-settlement').value||null,
+  };
+  if(editingTodoId){
+    patch('todos',payload,`?id=eq.${editingTodoId}`).then(()=>{
+      const t=todoItems.find(x=>x.id===editingTodoId);
+      if(t)Object.assign(t,payload);
+      closeTodoModal();renderTodos();showToast('Tarefa atualizada');
+    }).catch(e=>showToast('Erro: '+e.message,true));
+  }else{
+    post('todos',payload).then(r=>{
+      todoItems.unshift(r[0]);
+      closeTodoModal();renderTodos();showToast('Tarefa criada');
+    }).catch(e=>showToast('Erro: '+e.message,true));
+  }
+}
+function delTodo(id){
+  if(!confirm('Excluir esta tarefa?'))return;
+  del('todos',`?id=eq.${id}`).then(()=>{
+    todoItems=todoItems.filter(x=>x.id!==id);
+    renderTodos();showToast('Tarefa excluída');
   }).catch(e=>showToast('Erro',true));
 }
 
