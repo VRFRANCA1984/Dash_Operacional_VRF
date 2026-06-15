@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -735,6 +734,7 @@ input[type=range]::-moz-range-progress{background:var(--thumb-color,#3b82f6);hei
       <div class="form-field"><label>Fim contrato</label><input type="date" id="tp-pm-end"/></div>
       <div class="form-field"><label>Valor</label><input type="text" id="tp-pm-value"/></div>
       <div class="form-field"><label>Responsável</label><input type="text" id="tp-pm-owner"/></div>
+      <div class="form-field form-field-full"><label>Descrição</label><textarea id="tp-pm-desc" rows="3" placeholder="Breve descrição do parceiro, contexto de relacionamento..."></textarea></div>
     </div>
     <div class="modal-footer"><button class="btn btn-primary" onclick="saveTP()"><i class="ti ti-check"></i>Salvar</button><button class="btn" onclick="closeTPModal()">Cancelar</button></div>
   </div>
@@ -1674,14 +1674,15 @@ async function saveTP(){
   const category=document.getElementById('tp-pm-cat').value.trim(),status=document.getElementById('tp-pm-status').value,risk_level=document.getElementById('tp-pm-risk').value;
   const contract_start=document.getElementById('tp-pm-start').value||null,contract_end=document.getElementById('tp-pm-end').value||null;
   const contract_value=document.getElementById('tp-pm-value').value.trim(),owner=document.getElementById('tp-pm-owner').value.trim();
+  const description=document.getElementById('tp-pm-desc').value.trim();
   try{
     if(editingTpId){
-      await patch('third_parties',{name,category,status,risk_level,contract_start,contract_end,contract_value,owner},`?id=eq.${editingTpId}`);
-      const t=tpList.find(x=>x.id===editingTpId);Object.assign(t,{name,category,status,risk_level,contract_start,contract_end,contract_value,owner});
+      await patch('third_parties',{name,category,status,risk_level,contract_start,contract_end,contract_value,owner,description},`?id=eq.${editingTpId}`);
+      const t=tpList.find(x=>x.id===editingTpId);Object.assign(t,{name,category,status,risk_level,contract_start,contract_end,contract_value,owner,description});
       if(tpActiveId===editingTpId){document.getElementById('tp-dp-name').textContent=t.name;renderTPInfo(t);}
       showToast('Parceiro atualizado!');editingTpId=null;
     }else{
-      const r=await post('third_parties',{name,category,status,risk_level,contract_start,contract_end,contract_value,owner});
+      const r=await post('third_parties',{name,category,status,risk_level,contract_start,contract_end,contract_value,owner,description});
       const t=r[0];
       const cr=await post('tp_competencies',TP_COMP_NAMES.map(label=>({tp_id:t.id,label,score:5})));
       t._tp_comps=cr||[];t._contacts=[];t._slas=[];t._evals=[];t._risks=[];tpList.push(t);showToast('Parceiro adicionado!');
@@ -1697,6 +1698,7 @@ function openEditTP(){
   document.getElementById('tp-pm-start').value=t.contract_start?t.contract_start.split('T')[0]:'';
   document.getElementById('tp-pm-end').value=t.contract_end?t.contract_end.split('T')[0]:'';
   document.getElementById('tp-pm-value').value=t.contract_value||'';document.getElementById('tp-pm-owner').value=t.owner||'';
+  document.getElementById('tp-pm-desc').value=t.description||'';
   document.getElementById('tp-new-modal').classList.add('vis');
 }
 function closeTPModal(){document.getElementById('tp-new-modal').classList.remove('vis');document.getElementById('tp-modal-title').textContent='Novo parceiro';editingTpId=null;['tp-pm-name','tp-pm-cat','tp-pm-value','tp-pm-owner','tp-pm-desc'].forEach(id=>document.getElementById(id).value='');}
