@@ -69,8 +69,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(295px,1fr));gap:12px;margin-bottom:2rem}
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.1rem 1.25rem;cursor:pointer;transition:border-color .15s}
 .card:hover{border-color:var(--border2)}
-.card.selected{border:2px solid var(--blue)}
-.pcard.overdue{border-left:3px solid #f59e0b}
+.card.selected{border:2px solid var(--blue);border-top:3px solid var(--blue)}
+.pcard.overdue{}
 .card-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
 .card-av{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:500;font-size:13px;flex-shrink:0}
 .card-av-round{border-radius:50%}
@@ -958,7 +958,7 @@ function renderCards(){
     const tb=t===null?'#f3f4f6':t>0?'#f0fdf4':t<0?'#fef2f2':'#f3f4f6';
     const tt=t===null?'#6b7280':t>0?'#15803d':t<0?'#b91c1c':'#6b7280';
     const ls=lastSession(p),pdiC=(p._pdis||[]).length,overdue=isOverdue(p),ds=daysSince((ls||{}).date),comps=p._comps||[];
-    return`<div class="card pcard ${gpActiveId===p.id?'selected':''} ${overdue?'overdue':''}" onclick="selectPerson(${p.id})">
+    return`<div class="card pcard ${gpActiveId===p.id?'selected':''} ${overdue?'overdue':''}" style="border-top:3px solid ${c.bar}" onclick="selectPerson(${p.id})">
       <div class="card-head"><div class="card-av card-av-round" style="background:${c.bg};color:${c.text}">${getInitials(p.name)}</div>
       <div style="flex:1;min-width:0"><div class="card-name">${p.name}</div><div class="card-sub">${p.role||''}</div></div>
       ${overdue?`<span title="Sem 1:1 há ${ds} dias" style="font-size:14px;color:#f59e0b"><i class="ti ti-clock"></i></span>`:''}
@@ -1472,10 +1472,10 @@ function selectTP(id){
 function renderTPInfo(t){
   const RL={baixo:{bg:'#f0fdf4',text:'#15803d'},médio:{bg:'#fffbeb',text:'#92400e'},alto:{bg:'#fef2f2',text:'#b91c1c'},crítico:{bg:'#fdf2f8',text:'#701a75'}};
   const rl=RL[t.risk_level]||RL.médio;
-  document.getElementById('tp-dp-info').innerHTML=`<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-top:8px">
+  const descHtml=t.description?`<div style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin-top:10px"><div style="font-size:11px;color:var(--text2);margin-bottom:5px">Descrição</div><div style="font-size:13px;color:var(--text);line-height:1.6;white-space:pre-wrap">${t.description}</div></div>`:'';document.getElementById('tp-dp-info').innerHTML=`<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-top:8px">
     ${[['Nome',t.name],['Categoria',t.category||'—'],['Status',t.status||'—'],['Responsável',t.owner||'—'],['Início contrato',fmtDateFull(t.contract_start)||'—'],['Fim contrato',fmtDateFull(t.contract_end)||'—'],['Valor',t.contract_value||'—']].map(([l,v])=>`<div style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px"><div style="font-size:11px;color:var(--text2);margin-bottom:3px">${l}</div><div style="font-size:13px;font-weight:500">${v}</div></div>`).join('')}
     <div style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px"><div style="font-size:11px;color:var(--text2);margin-bottom:3px">Nível de risco</div><span class="tag" style="background:${rl.bg};color:${rl.text}">${t.risk_level||'baixo'}</span></div>
-  </div>`;
+  </div>\${descHtml}`;
 }
 
 function renderTPContacts(t){
@@ -1588,13 +1588,51 @@ function renderTPRadar(t){
 }
 function renderTPEvo(t){
   const ctx=document.getElementById('tp-evo-chart').getContext('2d');
-  const idx=tpList.indexOf(t),c=getColor(idx>=0?idx:0);
+  const tidx=tpList.indexOf(t),c=getColor(tidx>=0?tidx:0);
   if(tpEvoChart)tpEvoChart.destroy();
-  const sorted=[...(t._evals||[])].sort((a,b)=>a.date.localeCompare(b.date));
+  const sorted=[...(t._evals||[])].sort((a,b)=>(a.date||'').localeCompare(b.date||''));
   const leg=document.getElementById('tp-evo-legend');
-  if(!sorted.length){if(leg)leg.innerHTML='<span style="color:var(--text3)">Nenhuma avaliação.</span>';return;}
-  if(leg)leg.innerHTML=`<span style="display:inline-flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:${c.bar};border-radius:2px;display:inline-block"></span>Nota por avaliação</span>`;
-  tpEvoChart=new Chart(ctx,{type:'line',data:{labels:sorted.map(s=>fmtFull(s.date)+' ('+s.category+')'),datasets:[{label:'Nota',data:sorted.map(s=>s.score||0),borderColor:c.bar,backgroundColor:c.bar+'18',pointBackgroundColor:c.bar,pointRadius:5,borderWidth:2.5,fill:true,tension:0.3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{min:0,max:10,ticks:{stepSize:2,color:'#9ca3af'}},x:{ticks:{color:'#9ca3af',font:{size:10},autoSkip:false,maxRotation:35}}}}});
+  if(!sorted.length){
+    if(leg)leg.innerHTML='<span style="color:var(--text3)">Nenhuma avaliação registrada.</span>';
+    ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
+    return;
+  }
+  const labels=sorted.map(s=>fmtFull(s.date));
+  const scores=sorted.map(s=>parseFloat(s.score)||0);
+  const avg=scores.reduce((a,b)=>a+b,0)/scores.length;
+  if(leg)leg.innerHTML='<div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;font-size:12px">'
+    +'<span style="display:flex;align-items:center;gap:5px"><span style="width:12px;height:3px;background:'+c.bar+';display:inline-block;border-radius:2px"></span>Nota por avaliação</span>'
+    +'<span style="display:flex;align-items:center;gap:5px"><span style="width:12px;height:2px;background:#9ca3af;display:inline-block;border-radius:2px"></span>Média ('+avg.toFixed(1)+')</span>'
+    +'<span style="color:var(--text2)">Total: <b>'+sorted.length+'</b> avaliações</span>'
+    +'</div>';
+  tpEvoChart=new Chart(ctx,{
+    type:'line',
+    data:{
+      labels:labels,
+      datasets:[
+        {label:'Nota',data:scores,borderColor:c.bar,backgroundColor:c.bar+'22',pointBackgroundColor:c.bar,pointRadius:6,pointHoverRadius:8,borderWidth:2.5,fill:true,tension:0.3},
+        {label:'Media',data:Array(scores.length).fill(parseFloat(avg.toFixed(1))),borderColor:'#9ca3af',borderWidth:1.5,borderDash:[5,4],pointRadius:0,fill:false}
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{label:function(ctx2){
+          var s=sorted[ctx2.dataIndex];
+          if(ctx2.datasetIndex===1)return 'Media: '+avg.toFixed(1);
+          var lines=['Nota: '+ctx2.parsed.y];
+          if(s&&s.category)lines.push('Categoria: '+s.category);
+          if(s&&s.notes)lines.push('Obs: '+s.notes);
+          return lines;
+        }}}
+      },
+      scales:{
+        y:{min:0,max:10,ticks:{stepSize:2,color:'#9ca3af',font:{size:11}},grid:{color:'rgba(0,0,0,0.05)'}},
+        x:{ticks:{color:'#9ca3af',font:{size:11},maxRotation:30}}
+      }
+    }
+  });
 }
 function openTPCompare(){
   if(tpList.length<2){showToast('Precisa de ao menos 2 parceiros.');return;}
@@ -1660,7 +1698,7 @@ function openEditTP(){
   document.getElementById('tp-pm-value').value=t.contract_value||'';document.getElementById('tp-pm-owner').value=t.owner||'';
   document.getElementById('tp-new-modal').classList.add('vis');
 }
-function closeTPModal(){document.getElementById('tp-new-modal').classList.remove('vis');document.getElementById('tp-modal-title').textContent='Novo parceiro';editingTpId=null;['tp-pm-name','tp-pm-cat','tp-pm-value','tp-pm-owner'].forEach(id=>document.getElementById(id).value='');}
+function closeTPModal(){document.getElementById('tp-new-modal').classList.remove('vis');document.getElementById('tp-modal-title').textContent='Novo parceiro';editingTpId=null;['tp-pm-name','tp-pm-cat','tp-pm-value','tp-pm-owner','tp-pm-desc'].forEach(id=>document.getElementById(id).value='');}
 async function deleteTP(){
   if(!tpActiveId||!confirm('Excluir este parceiro?'))return;
   try{await del('third_parties',`?id=eq.${tpActiveId}`);tpList=tpList.filter(x=>x.id!==tpActiveId);tpActiveId=null;document.getElementById('tp-detail').classList.remove('vis');renderTPCards();showToast('Parceiro excluído');}catch(e){showToast('Erro',true);}
