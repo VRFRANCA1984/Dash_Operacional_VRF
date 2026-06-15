@@ -1475,7 +1475,7 @@ function renderTPInfo(t){
   const descHtml=t.description?`<div style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin-top:10px"><div style="font-size:11px;color:var(--text2);margin-bottom:5px">Descrição</div><div style="font-size:13px;color:var(--text);line-height:1.6;white-space:pre-wrap">${t.description}</div></div>`:'';document.getElementById('tp-dp-info').innerHTML=`<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-top:8px">
     ${[['Nome',t.name],['Categoria',t.category||'—'],['Status',t.status||'—'],['Responsável',t.owner||'—'],['Início contrato',fmtDateFull(t.contract_start)||'—'],['Fim contrato',fmtDateFull(t.contract_end)||'—'],['Valor',t.contract_value||'—']].map(([l,v])=>`<div style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px"><div style="font-size:11px;color:var(--text2);margin-bottom:3px">${l}</div><div style="font-size:13px;font-weight:500">${v}</div></div>`).join('')}
     <div style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px"><div style="font-size:11px;color:var(--text2);margin-bottom:3px">Nível de risco</div><span class="tag" style="background:${rl.bg};color:${rl.text}">${t.risk_level||'baixo'}</span></div>
-  </div>\${descHtml}`;
+  </div>`+descHtml;
 }
 
 function renderTPContacts(t){
@@ -1666,6 +1666,7 @@ function exportOneTPPDF(){
 function switchTPTab(btn,tabId){
   document.querySelectorAll('#tp-detail .tab').forEach(b=>b.classList.remove('on'));if(btn)btn.classList.add('on');
   document.querySelectorAll('#tp-detail .tp').forEach(t=>t.classList.remove('on'));document.getElementById(tabId).classList.add('on');
+  if(tabId==='tp-t-evo'&&tpActiveId){const t=tpList.find(x=>x.id===tpActiveId);if(t)setTimeout(()=>renderTPEvo(t),50);}
 }
 
 async function saveTP(){
