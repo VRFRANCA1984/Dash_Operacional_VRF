@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -891,7 +890,7 @@ function daysSince(ds){if(!ds)return 9999;return Math.floor((new Date()-new Date
 function daysUntil(ds){if(!ds)return 9999;return Math.floor((new Date(ds)-new Date())/(864e5));}
 function showToast(msg,err=false){const t=document.getElementById('toast');t.textContent=msg;t.className='toast'+(err?' error':'');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
 function loading(show){document.getElementById('loading').classList.toggle('hidden',!show);}
-function syncOk(){['sync-dot','sync-dot2'].forEach(id=>{const d=document.getElementById(id);d.classList.remove('loading');});document.getElementById('sync-label').textContent='Sincronizado';}
+function syncOk(){['sync-dot-top','sync-dot2'].forEach(id=>{const d=document.getElementById(id);if(d){d.className='sync-dot ok';}});const sl=document.getElementById('sync-label-top');if(sl)sl.textContent='Sincronizado';}
 
 // ── NAVEGAÇÃO ─────────────────────────────────────────────
 function showROSector(sub){
