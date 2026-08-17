@@ -266,6 +266,90 @@ input[type=range]::-moz-range-progress{background:var(--thumb-color,#f97316);hei
 #appRoot{flex:1;width:100%;min-width:0}
 .mob-menu-btn{display:none;position:fixed;top:22px;left:12px;z-index:210;background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);padding:8px;cursor:pointer;align-items:center;justify-content:center}
 @media(max-width:768px){.sidebar{transform:translateX(-100%);transition:transform .2s}.sidebar.open{transform:none}.main{margin-left:0;padding:.75rem}.topbar{left:0;padding-left:56px}.crumbs{display:none}.mob-menu-btn{display:flex}}
+
+/* ── OVERVIEW ── */
+.ov-section{margin-bottom:1.75rem}
+.ov-section-title{font-size:13px;font-weight:700;color:var(--text);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.9rem;display:flex;align-items:center;gap:8px}
+.ov-section-title i{color:var(--orange);font-size:15px}
+.ov-empty{font-size:13px;color:var(--text3);padding:1rem 0}
+.ov-watch-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.ov-watch-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.15rem;box-shadow:0 2px 8px rgba(0,0,0,0.05)}
+.ov-watch-head{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--text);margin-bottom:8px}
+.ov-watch-head i{font-size:15px}
+.ov-watch-list{display:flex;flex-direction:column;gap:6px;font-size:12.5px;color:var(--text2)}
+.ov-watch-list li{list-style:none;display:flex;gap:7px;align-items:flex-start}
+.ov-watch-list li i{font-size:13px;margin-top:2px;color:var(--text3);flex-shrink:0}
+.ov-link{color:var(--orange-text);cursor:pointer;font-weight:600}
+.ov-link:hover{text-decoration:underline}
+
+/* ── CALENDÁRIO & CHECKLIST COO ── */
+.lane-pill{font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;letter-spacing:.02em;white-space:nowrap}
+.lane-pill.lane-team{background:var(--blue-bg);color:var(--blue-text)}
+.lane-pill.lane-area{background:var(--orange-bg);color:var(--orange-text)}
+.lane-pill.lane-company{background:var(--purple-bg);color:var(--purple-text)}
+.cal-legend{display:flex;gap:16px;flex-wrap:wrap;align-items:center;font-size:12px;color:var(--text2);margin-bottom:1.1rem}
+.cal-legend b{color:var(--text);font-weight:600}
+.cal-legend .dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px;vertical-align:middle}
+.cal-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem 1.4rem;margin-bottom:1.5rem;box-shadow:0 2px 8px rgba(0,0,0,0.05)}
+.cal-nav-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.cal-nav-head h3{font-size:15px;font-weight:700;color:var(--text)}
+.cal-nav-btns{display:flex;gap:6px}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.cal-dow{text-align:center;font-size:11px;color:var(--text3);font-weight:600;padding-bottom:4px;text-transform:uppercase}
+.cal-cell{min-height:76px;border-radius:10px;border:1px solid var(--border);padding:6px;cursor:pointer;background:var(--bg);display:flex;flex-direction:column;gap:4px;transition:background .12s}
+.cal-cell.empty{visibility:hidden}
+.cal-cell.weekend{background:#f2f1ee;cursor:default}
+.cal-cell:not(.weekend):hover{background:var(--surface2)}
+.cal-cell.selected{outline:2px solid var(--orange);outline-offset:-1px}
+.cal-cell .cal-daynum{font-size:12.5px;font-weight:600;color:var(--text)}
+.cal-cell.today .cal-daynum{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:var(--navy);color:#fff}
+.cal-badges{display:flex;gap:3px;flex-wrap:wrap;margin-top:auto}
+.cal-badge{font-size:9.5px;font-weight:500;padding:1px 6px;border-radius:8px;color:#fff;line-height:1.6;letter-spacing:.01em}
+.cal-badge.b-huddle{background:#2563eb}
+.cal-badge.b-bridge{background:#f97316}
+.cal-badge.b-mbr{background:#1e2d4d}
+.cal-badge.b-1on1{background:#d97706}
+.cal-badge.b-todo{background:#b91c1c}
+.cal-progress-mini{font-size:9px;color:var(--green-text);font-weight:700}
+.chk-todo-item{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:13px;padding:8px 10px;background:var(--red-bg);border:1px solid #fecaca;border-radius:var(--radius);margin-bottom:6px}
+.chk-todo-item .chk-todo-name{font-weight:500;color:var(--text)}
+.chk-todo-item .chk-todo-meta{font-size:11px;color:var(--text3);margin-top:2px}
+.chk-todo-item button{font-size:11.5px;background:#fff;border:1px solid #fecaca;color:var(--red-text);border-radius:8px;padding:4px 10px;cursor:pointer;white-space:nowrap}
+.chk-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem 1.4rem;box-shadow:0 2px 8px rgba(0,0,0,0.05)}
+.chk-head{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:10px;margin-bottom:10px}
+.chk-head h3{font-size:15px;font-weight:700;color:var(--text)}
+.chk-date-sub{font-size:12.5px;color:var(--text2);text-transform:capitalize}
+.chk-progress-row{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.chk-track{flex:1;height:8px;border-radius:6px;background:var(--surface2);overflow:hidden}
+.chk-fill{height:100%;background:var(--green);width:0%;transition:width .2s}
+.chk-progress-label{font-size:12px;font-weight:700;color:var(--text2);white-space:nowrap}
+.chk-section{margin-bottom:16px}
+.chk-section h4{font-size:11.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--text3);margin:0 0 6px;border-bottom:1px solid var(--border);padding-bottom:5px;font-weight:600}
+.chk-item{display:flex;align-items:flex-start;gap:10px;padding:7px 4px;border-radius:8px}
+.chk-item:hover{background:var(--bg)}
+.chk-item input[type=checkbox]{margin-top:3px;width:16px;height:16px;accent-color:var(--green);cursor:pointer}
+.chk-item label{flex:1;font-size:13.5px;cursor:pointer;color:var(--text)}
+.chk-item.done label{color:var(--text3);text-decoration:line-through}
+.chk-item .chk-time{font-size:11px;color:var(--text3);margin-right:4px;font-family:'DM Mono',monospace}
+.chk-item .lane-pill{margin-left:8px;flex-shrink:0}
+.chk-1on1-input{margin-left:26px;margin-top:-2px;margin-bottom:8px;font-size:12.5px;color:var(--text2)}
+.chk-1on1-input input[type=text]{font-size:12.5px;padding:4px 8px;border-radius:8px;border:1px solid var(--border2);background:var(--surface);color:var(--text);width:220px;font-family:'DM Sans',sans-serif}
+.chk-weekend-msg{font-size:13.5px;color:var(--text2);padding:20px 0;text-align:center}
+@media(max-width:720px){.cal-grid{gap:4px}.cal-cell{min-height:54px;padding:4px}.cal-badge{display:none}}
+/* RACI */
+.raci-table{width:100%;border-collapse:collapse;font-size:12.5px}
+.raci-table th{text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--text3);font-weight:600;padding:8px 10px;border-bottom:1px solid var(--border);white-space:nowrap}
+.raci-table td{padding:10px;border-bottom:1px solid var(--border);vertical-align:top}
+.raci-table tbody tr:hover td{background:var(--surface2)}
+.raci-decision{font-weight:500;color:var(--text);font-size:13px}
+.raci-cat{font-size:11px;color:var(--text3);margin-top:2px;line-height:1.4}
+.raci-chip{display:inline-block;font-size:10.5px;font-weight:500;padding:2px 7px;border-radius:8px;margin:1px 3px 1px 0;white-space:nowrap}
+.raci-chip.r{background:var(--blue-bg);color:var(--blue-text)}
+.raci-chip.a{background:var(--red-bg);color:var(--red-text)}
+.raci-chip.c{background:var(--green-bg);color:var(--green-text)}
+.raci-chip.i{background:var(--purple-bg);color:var(--purple-text)}
+.raci-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px;vertical-align:-1px}
+.raci-legend{margin-top:14px;font-size:11px;color:var(--text3);display:flex;gap:16px;flex-wrap:wrap}
 </style>
 </head>
 <body>
@@ -301,12 +385,15 @@ input[type=range]::-moz-range-progress{background:var(--thumb-color,#f97316);hei
 <button class="mob-menu-btn" onclick="document.querySelector('.sidebar').classList.toggle('open')"><i class="ti ti-menu-2" style="font-size:18px"></i></button>
 <nav class="sidebar">
   <div class="sidebar-nav">
-    <button class="nav-item active" id="nav-gp" onclick="showSector('gp')"><i class="ti ti-users"></i>Equipe</button>
+    <button class="nav-item active" id="nav-overview" onclick="showSector('overview')"><i class="ti ti-layout-dashboard"></i>Overview</button>
+    <button class="nav-item" id="nav-calendar" onclick="showSector('calendar')"><i class="ti ti-calendar"></i>Calendário</button>
+    <button class="nav-item" id="nav-gp" onclick="showSector('gp')"><i class="ti ti-users"></i>Equipe</button>
     <button class="nav-item" id="nav-tp" onclick="showSector('tp')"><i class="ti ti-building-store"></i>Third Parties</button>
     <button class="nav-item" id="nav-ro-risks" onclick="showROSector('risks')"><i class="ti ti-alert-triangle"></i>Riscos</button>
     <button class="nav-item" id="nav-ro-incidents" onclick="showROSector('incidents')"><i class="ti ti-flame"></i>Incidentes</button>
     <button class="nav-item" id="nav-ro-desenq" onclick="showROSector('desenq')"><i class="ti ti-ban"></i>Desenquadramentos</button>
     <button class="nav-item" id="nav-ro-indicators" onclick="showROSector('indicators')"><i class="ti ti-trending-up"></i>Indicadores</button>
+    <button class="nav-item" id="nav-raci" onclick="showSector('raci')"><i class="ti ti-hierarchy-2"></i>RACI</button>
     <button class="nav-item" id="nav-brainstorm" onclick="showSector('brainstorm')"><i class="ti ti-bulb"></i>Brainstorm</button>
     <button class="nav-item" id="nav-todo" onclick="showSector('todo')"><i class="ti ti-checklist"></i>To Do</button>
 
@@ -316,9 +403,118 @@ input[type=range]::-moz-range-progress{background:var(--thumb-color,#f97316);hei
 
 <div class="main">
 <!-- ═══════════════════════════════════════════
+     SETOR OVERVIEW — VISÃO GERAL DO COO
+═══════════════════════════════════════════ -->
+<div class="sector active" id="sector-overview">
+<div class="sector-body">
+  <div class="page-header">
+    <div class="page-header-left"><div class="eyebrow">COO · TERA CAPITAL</div><h2>Overview</h2><p id="ov-sub">Carregando...</p></div>
+    <div class="btn-row">
+      <button class="btn" onclick="renderOverview()"><i class="ti ti-refresh"></i>Atualizar</button>
+      <button class="btn btn-primary" onclick="showSector('calendar')"><i class="ti ti-calendar"></i>Ir para o Calendário</button>
+    </div>
+  </div>
+
+  <div class="metrics" id="ov-metrics"></div>
+
+  <div class="alert-bar" id="ov-alert"><i class="ti ti-alert-triangle" style="flex-shrink:0"></i><span>Pontos que pedem atenção agora:</span><span id="ov-alert-names"></span></div>
+
+  <div class="ov-section">
+    <div class="ov-section-title"><i class="ti ti-eye"></i>O que o COO deve olhar</div>
+    <div class="ov-watch-grid">
+      <div class="ov-watch-card">
+        <div class="ov-watch-head"><i class="ti ti-sun" style="color:#2563eb"></i>Diariamente</div>
+        <ul class="ov-watch-list">
+          <li><i class="ti ti-point"></i>Incidentes novos ou críticos sem responsável — <span class="ov-link" onclick="showROSector('incidents')">ver Incidentes</span></li>
+          <li><i class="ti ti-point"></i>Tarefas do <span class="ov-link" onclick="showSector('todo')">To Do</span> vencidas ou perto do vencimento</li>
+          <li><i class="ti ti-point"></i>Rodar o checklist do dia no <span class="ov-link" onclick="showSector('calendar')">Calendário</span> (huddle ≤15min, MITs, Action Log)</li>
+        </ul>
+      </div>
+      <div class="ov-watch-card">
+        <div class="ov-watch-head"><i class="ti ti-calendar-week" style="color:#d97706"></i>Semanalmente</div>
+        <ul class="ov-watch-list">
+          <li><i class="ti ti-point"></i>Riscos críticos/altos em aberto e status de mitigação — <span class="ov-link" onclick="showROSector('risks')">ver Riscos</span></li>
+          <li><i class="ti ti-point"></i>Desenquadramentos abertos e tempo de resolução — <span class="ov-link" onclick="showROSector('desenq')">ver Desenquadramentos</span></li>
+          <li><i class="ti ti-point"></i>Indicadores em atenção ou crítico — <span class="ov-link" onclick="showROSector('indicators')">ver Indicadores</span></li>
+          <li><i class="ti ti-point"></i>1:1s atrasadas (&gt;30 dias) — <span class="ov-link" onclick="showSector('gp')">ver Equipe</span></li>
+          <li><i class="ti ti-point"></i>Notas novas no <span class="ov-link" onclick="showSector('brainstorm')">Brainstorm</span> — algum gargalo se repetindo?</li>
+        </ul>
+      </div>
+      <div class="ov-watch-card">
+        <div class="ov-watch-head"><i class="ti ti-calendar-month" style="color:#7e22ce"></i>Mensalmente</div>
+        <ul class="ov-watch-list">
+          <li><i class="ti ti-point"></i>PDIs em andamento — quantos avançaram vs. estagnaram — <span class="ov-link" onclick="showSector('gp')">ver Equipe</span></li>
+          <li><i class="ti ti-point"></i>Third Parties — SLAs e riscos de fornecedores — <span class="ov-link" onclick="showSector('tp')">ver Third Parties</span></li>
+          <li><i class="ti ti-point"></i>Comparar os números deste Overview com o mês anterior</li>
+          <li><i class="ti ti-point"></i>Rodar a Monthly Business Review usando o ritual mensal do <span class="ov-link" onclick="showSector('calendar')">Calendário</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="ov-section">
+    <div class="ov-section-title"><i class="ti ti-flag"></i>Atenção requerida agora</div>
+    <div id="ov-attention"></div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SETOR CALENDÁRIO — CADÊNCIA & CHECKLIST DO COO
+═══════════════════════════════════════════ -->
+<div class="sector" id="sector-calendar">
+<div class="sector-body">
+  <div class="page-header">
+    <div class="page-header-left"><div class="eyebrow">COO · TERA CAPITAL</div><h2>Calendário &amp; Checklist</h2><p>Ritmo diário, semanal e mensal — Time · Área · Empresa</p></div>
+  </div>
+
+  <div class="cal-legend">
+    <span><b>Âmbito:</b></span>
+    <span class="lane-pill lane-team">TIME</span>
+    <span class="lane-pill lane-area">ÁREA</span>
+    <span class="lane-pill lane-company">EMPRESA</span>
+    <span style="margin-left:auto;display:flex;gap:14px;flex-wrap:wrap">
+      <span><span class="dot" style="background:#2563eb"></span>Huddle diário</span>
+      <span><span class="dot" style="background:#f97316"></span>Weekly Bridge + Peer Review (2ª-feira)</span>
+      <span><span class="dot" style="background:#1e2d4d"></span>MBR (1ª 4ª-feira do mês)</span>
+    </span>
+  </div>
+
+  <div class="cal-wrap">
+    <div class="cal-nav-head">
+      <h3 id="cal-month-label">Agosto 2026</h3>
+      <div class="cal-nav-btns">
+        <button class="btn btn-sm" id="cal-prev"><i class="ti ti-chevron-left"></i></button>
+        <button class="btn btn-sm" id="cal-today">Hoje</button>
+        <button class="btn btn-sm" id="cal-next"><i class="ti ti-chevron-right"></i></button>
+      </div>
+    </div>
+    <div class="cal-grid" id="cal-grid"></div>
+  </div>
+
+  <div class="chk-wrap">
+    <div class="chk-head">
+      <div>
+        <h3 id="chk-title">Checklist do dia</h3>
+        <div class="chk-date-sub" id="chk-date"></div>
+      </div>
+      <button class="btn btn-sm" id="chk-reset"><i class="ti ti-eraser"></i>Limpar checklist deste dia</button>
+    </div>
+    <div class="chk-progress-row">
+      <div class="chk-track"><div class="chk-fill" id="chk-fill"></div></div>
+      <div class="chk-progress-label" id="chk-progress-label">0 / 0</div>
+    </div>
+    <div id="chk-body"></div>
+  </div>
+
+  <p style="font-size:11.5px;color:var(--text3);margin-top:1rem">Este módulo funciona como planner do dia/semana em uso — o estado dos checkboxes não persiste ao recarregar a página. O registro permanente do ritmo fica nas abas/registros operacionais deste Hub (Incidentes, To Do, Brainstorm); use este calendário para conduzir o dia, não como histórico.</p>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════
      SETOR GP — GESTÃO DE PESSOAS
 ═══════════════════════════════════════════ -->
-<div class="sector active" id="sector-gp">
+<div class="sector" id="sector-gp">
 <div class="sector-body">
   <div class="page-header">
     <div class="page-header-left"><div class="eyebrow">GESTÃO DE PESSOAS</div><h2>Equipe</h2><p id="gp-sub">Carregando...</p></div>
@@ -696,6 +892,38 @@ input[type=range]::-moz-range-progress{background:var(--thumb-color,#f97316);hei
 </div>
 </div>
 
+<div class="sector" id="sector-raci">
+<div class="sector-body">
+  <div class="page-header">
+    <div class="page-header-left"><div class="eyebrow">GOVERNANÇA</div><h2>RACI</h2><p>Matriz de responsabilidades e alçada de decisão</p></div>
+    <div class="btn-row">
+      <button class="btn" onclick="exportRaciPDF()"><i class="ti ti-file-download"></i>PDF</button>
+      <button class="btn btn-primary" onclick="openRaciModal()"><i class="ti ti-plus"></i>Nova decisão</button>
+    </div>
+  </div>
+  <div class="metrics">
+    <div class="metric metric-c1"><div class="metric-label">Decisões mapeadas</div><div class="metric-value" id="raci-m-total">—</div></div>
+    <div class="metric metric-c2"><div class="metric-label">Categorias</div><div class="metric-value" id="raci-m-cats">—</div></div>
+  </div>
+  <div class="filter-bar">
+    <div class="search-wrap"><i class="ti ti-search"></i><input type="text" id="raci-search" placeholder="Buscar decisão..." oninput="renderRaci()"/></div>
+    <select class="filter-select" id="raci-filter-cat" onchange="renderRaci()"><option value="">Todas as categorias</option></select>
+  </div>
+  <div style="overflow-x:auto">
+    <table class="raci-table" id="raci-table">
+      <thead><tr><th>Decisão / Atividade</th><th>Responsible (R)</th><th>Accountable (A)</th><th>Consulted (C)</th><th>Informed (I)</th><th></th></tr></thead>
+      <tbody id="raci-tbody"></tbody>
+    </table>
+  </div>
+  <div class="raci-legend">
+    <span><span class="raci-dot" style="background:var(--blue)"></span>R — Responsible (executa)</span>
+    <span><span class="raci-dot" style="background:var(--red)"></span>A — Accountable (aprova / responde por)</span>
+    <span><span class="raci-dot" style="background:var(--green)"></span>C — Consulted (é consultado antes)</span>
+    <span><span class="raci-dot" style="background:var(--purple-text,#7e22ce)"></span>I — Informed (é informado depois)</span>
+  </div>
+</div>
+</div>
+
 <div class="sector" id="sector-brainstorm">
 <div class="sector-body">
   <div class="page-header">
@@ -823,6 +1051,25 @@ input[type=range]::-moz-range-progress{background:var(--thumb-color,#f97316);hei
     </div>
   </div>
 </div>
+<!-- MODAL RACI -->
+<div class="modal-backdrop" id="raci-modal">
+  <div class="modal">
+    <div class="modal-title" id="raci-modal-title">Nova decisão</div>
+    <div class="form-grid">
+      <div class="form-field form-field-full"><label>Decisão / Atividade</label><input type="text" id="raci-decision" placeholder="ex: Aprovação de aporte de capital"/></div>
+      <div class="form-field"><label>Categoria</label><input type="text" id="raci-category" list="raci-cat-list" placeholder="ex: Financeiro, RH, Compliance..."/><datalist id="raci-cat-list"></datalist></div>
+      <div class="form-field"><label>Responsible (R)</label><input type="text" id="raci-responsible" placeholder="Quem executa"/></div>
+      <div class="form-field"><label>Accountable (A)</label><input type="text" id="raci-accountable" placeholder="Quem aprova / responde por"/></div>
+      <div class="form-field"><label>Consulted (C)</label><input type="text" id="raci-consulted" placeholder="Quem é consultado (opcional)"/></div>
+      <div class="form-field"><label>Informed (I)</label><input type="text" id="raci-informed" placeholder="Quem é informado (opcional)"/></div>
+      <div class="form-field form-field-full"><label>Observações</label><textarea id="raci-notes" rows="2" placeholder="Contexto adicional (opcional)"></textarea></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" onclick="saveRaciItem()"><i class="ti ti-check"></i>Salvar</button>
+      <button class="btn" onclick="closeRaciModal()">Cancelar</button>
+    </div>
+  </div>
+</div>
 <div class="loading" id="loading"><div class="spinner"></div><div style="font-size:13px;color:var(--text2)">Carregando dados...</div></div>
 <div class="modal-backdrop" id="note-modal">
   <div class="modal" style="max-width:520px">
@@ -928,6 +1175,7 @@ function enterApp(){
   document.getElementById('loginOverlay').style.display='none';
   document.getElementById('appRoot').style.display='block';
   loadAll();
+  if(typeof _calInitNav==='function'){_calInitNav();renderCOOCalendar();}
 }
 
 // Corrigido: verifica a sessão só depois de todo o script carregar,
@@ -1006,12 +1254,15 @@ function loading(show){document.getElementById('loading').classList.toggle('hidd
 function syncOk(){['sync-dot-top','sync-dot2'].forEach(id=>{const d=document.getElementById(id);if(d){d.className='sync-dot ok';}});const sl=document.getElementById('sync-label-top');if(sl)sl.textContent='Sincronizado';}
 
 // ── NAVEGAÇÃO ─────────────────────────────────────────────
+const ALL_SECTOR_KEYS=['overview','calendar','gp','tp','ro-risks','ro-incidents','ro-desenq','ro-indicators','raci','brainstorm','todo'];
+const MAIN_NAV_KEYS=['overview','calendar','gp','tp','raci','brainstorm','todo'];
+
 function showROSector(sub){
-  ['gp','tp','ro-risks','ro-incidents','ro-desenq','ro-indicators','brainstorm','todo'].forEach(k=>{
+  ALL_SECTOR_KEYS.forEach(k=>{
     const el=document.getElementById('sector-'+k);if(el)el.classList.remove('active');
   });
   const el=document.getElementById('sector-ro-'+sub);if(el)el.classList.add('active');
-  ['gp','tp','brainstorm','todo'].forEach(k=>{const n=document.getElementById('nav-'+k);if(n)n.classList.remove('active');});
+  MAIN_NAV_KEYS.forEach(k=>{const n=document.getElementById('nav-'+k);if(n)n.classList.remove('active');});
   ['risks','incidents','desenq','indicators'].forEach(v=>{
     const n=document.getElementById('nav-ro-'+v);if(n)n.classList.remove('active');
   });
@@ -1019,17 +1270,272 @@ function showROSector(sub){
   renderROSub(sub);
 }
 function showSector(s){
-  ['gp','tp','ro-risks','ro-incidents','ro-desenq','ro-indicators','brainstorm','todo'].forEach(k=>{
+  ALL_SECTOR_KEYS.forEach(k=>{
     const el=document.getElementById('sector-'+k);if(el)el.classList.remove('active');
   });
   const el=document.getElementById('sector-'+s);if(el)el.classList.add('active');
-  ['gp','tp','brainstorm','todo'].forEach(k=>{const n=document.getElementById('nav-'+k);if(n)n.classList.remove('active');});
+  MAIN_NAV_KEYS.forEach(k=>{const n=document.getElementById('nav-'+k);if(n)n.classList.remove('active');});
   ['risks','incidents','desenq','indicators'].forEach(v=>{
     const n=document.getElementById('nav-ro-'+v);if(n)n.classList.remove('active');
   });
-  if(s==='gp'||s==='tp'||s==='brainstorm'||s==='todo'){const n=document.getElementById('nav-'+s);if(n)n.classList.add('active');}
+  if(MAIN_NAV_KEYS.includes(s)){const n=document.getElementById('nav-'+s);if(n)n.classList.add('active');}
   if(s==='brainstorm')renderBrainstorm();
   if(s==='todo')renderTodos();
+  if(s==='overview')renderOverview();
+  if(s==='calendar')renderCOOCalendar();
+  if(s==='raci')renderRaci();
+}
+
+// ══════════════════════════════════════════════════════════
+//  SETOR OVERVIEW — VISÃO GERAL DO COO
+//  (100% calculado a partir dos dados já carregados nas outras abas)
+// ══════════════════════════════════════════════════════════
+function renderOverview(){
+  const ovSub=document.getElementById('ov-sub');
+  if(!ovSub)return; // sector ainda não está no DOM (defensivo)
+  if(!(people&&people.length)&&!(roRisks&&roRisks.length)&&!(todoItems&&todoItems.length)){
+    ovSub.textContent='Aguardando sincronização dos dados...';
+  }else{
+    ovSub.textContent='Atualizado em '+new Date().toLocaleDateString('pt-BR')+' '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  }
+
+  const overduePeople=(people||[]).filter(p=>typeof isOverdue==='function'&&isOverdue(p));
+  const pdisAtivos=(people||[]).reduce((a,p)=>a+(p._pdis||[]).filter(pdi=>(pdi._milestones||[]).filter(m=>m.done).length<(pdi._milestones||[]).length).length,0);
+  const criticalRisks=(roRisks||[]).filter(r=>r.severity==='crítico'&&r.status!=='encerrado');
+  const openIncidents=(roIncidents||[]).filter(i=>i.status!=='resolvido');
+  const criticalIncidents=openIncidents.filter(i=>i.severity==='crítico');
+  const openDesenq=(roDesenqs||[]).filter(d=>d.status!=='resolvido');
+  const criticalIndicators=(roIndicators||[]).filter(i=>i.status==='crítico');
+  const t=today();
+  const overdueTodos=(todoItems||[]).filter(x=>!x.settlement_date&&x.expected_date&&x.expected_date<t);
+
+  const metrics=[
+    ['c1','Pessoas na equipe',people.length],
+    ['red','1:1 atrasada (>30d)',overduePeople.length],
+    ['c5','PDIs em andamento',pdisAtivos],
+    ['red','Riscos críticos abertos',criticalRisks.length],
+    ['c6','Incidentes abertos',openIncidents.length],
+    ['c4','Desenquadramentos abertos',openDesenq.length],
+    ['red','Indicadores críticos',criticalIndicators.length],
+    ['c3','Tarefas atrasadas (To Do)',overdueTodos.length],
+  ];
+  document.getElementById('ov-metrics').innerHTML=metrics.map(([c,label,val])=>
+    `<div class="metric metric-${c}"><div class="metric-label">${label}</div><div class="metric-value">${val}</div></div>`
+  ).join('');
+
+  const chips=[];
+  overduePeople.forEach(p=>chips.push(`<span class="alert-chip" onclick="showSector('gp');setTimeout(()=>{if(typeof selectPerson==='function')selectPerson(${p.id})},50)"><i class="ti ti-user" style="font-size:12px"></i>${p.name}</span>`));
+  criticalRisks.forEach(r=>chips.push(`<span class="alert-chip" onclick="showROSector('risks')"><i class="ti ti-alert-triangle" style="font-size:12px"></i>${r.title}</span>`));
+  criticalIncidents.forEach(i=>chips.push(`<span class="alert-chip" onclick="showROSector('incidents')"><i class="ti ti-flame" style="font-size:12px"></i>${i.title}</span>`));
+  criticalIndicators.forEach(i=>chips.push(`<span class="alert-chip" onclick="showROSector('indicators')"><i class="ti ti-trending-down" style="font-size:12px"></i>${i.title}</span>`));
+  const ab=document.getElementById('ov-alert');
+  if(chips.length){ab.classList.add('vis');document.getElementById('ov-alert-names').innerHTML=chips.join('');}
+  else if(ab){ab.classList.remove('vis');}
+
+  const items=[];
+  overduePeople.forEach(p=>{
+    const ls=(typeof lastSession==='function')?lastSession(p):null;
+    items.push({icon:'ti-user-exclamation',bg:'#fef2f2',color:'#b91c1c',title:`1:1 atrasada — ${p.name}`,meta:ls?`Última sessão há ${daysSince(ls.date)} dias`:'Sem sessão registrada',onclick:"showSector('gp')"});
+  });
+  criticalRisks.forEach(r=>items.push({icon:'ti-alert-triangle',bg:'#fdf2f8',color:'#701a75',title:`Risco crítico aberto — ${r.title}`,meta:r.responsible?('Resp: '+r.responsible):'Sem responsável definido',onclick:"showROSector('risks')"}));
+  criticalIncidents.forEach(i=>items.push({icon:'ti-flame',bg:'#fef2f2',color:'#b91c1c',title:`Incidente crítico — ${i.title}`,meta:i.status||'',onclick:"showROSector('incidents')"}));
+  criticalIndicators.forEach(i=>items.push({icon:'ti-trending-down',bg:'#fef2f2',color:'#b91c1c',title:`Indicador crítico — ${i.title}`,meta:'Requer revisão',onclick:"showROSector('indicators')"}));
+  overdueTodos.slice(0,6).forEach(x=>items.push({icon:'ti-checklist',bg:'#fffbeb',color:'#92400e',title:`Tarefa atrasada — ${x.name||''}`,meta:'Prevista para '+(typeof fmtFull==='function'?fmtFull(x.expected_date):x.expected_date),onclick:"showSector('todo')"}));
+
+  const wrap=document.getElementById('ov-attention');
+  if(!items.length){wrap.innerHTML='<div class="ov-empty">Nada crítico pendente agora. Continue rodando o checklist diário no Calendário.</div>';return;}
+  wrap.innerHTML=items.map(it=>`
+    <div class="act-item" style="cursor:pointer" onclick="${it.onclick}">
+      <div class="act-icon" style="background:${it.bg};color:${it.color}"><i class="ti ${it.icon}"></i></div>
+      <div class="act-body">
+        <div class="act-title">${it.title}</div>
+        <div class="act-meta">${it.meta||''}</div>
+      </div>
+    </div>`).join('');
+}
+
+// ══════════════════════════════════════════════════════════
+//  SETOR CALENDÁRIO — CADÊNCIA & CHECKLIST DO COO
+//  (planner de sessão — estado dos checkboxes não persiste ao recarregar)
+// ══════════════════════════════════════════════════════════
+const COO_DOW=["Seg","Ter","Qua","Qui","Sex","Sáb","Dom"];
+const COO_MONTHS=["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+let _calViewYear=null,_calViewMonth=null,_calSelectedDate=null;
+const _calStateByDay={};
+
+function _calToday(){return new Date();}
+function _calDayKey(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+function _calSameDay(a,b){return a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate();}
+function _calIsWeekend(d){const w=d.getDay();return w===0||w===6;}
+function _calIsMonday(d){return d.getDay()===1;}
+function _calIsTueThu(d){return d.getDay()===2||d.getDay()===4;}
+function _calFirstWednesday(year,month){const d=new Date(year,month,1);while(d.getDay()!==3)d.setDate(d.getDate()+1);return d.getDate();}
+function _calIsMBRDay(d){return d.getDate()===_calFirstWednesday(d.getFullYear(),d.getMonth());}
+
+function _calDailyItems(){
+  return [
+    {key:"scan",time:"07:30",lane:"company",label:"Market & Industry Scan — manchetes Global + Brasil"},
+    {key:"priority",time:"07:45",lane:"area",label:"Priority Review — definir Top 3 MITs do dia"},
+    {key:"huddle",time:"08:00",lane:"team",label:"Daily Leadership Huddle (≤15 min)"},
+    {key:"deepwork1",time:"08:15",lane:"area",label:"Deep Work Block 1 — prioridade estratégica"},
+    {key:"deepwork2",time:"14:00",lane:"company",label:"Deep Work Block 2 / Externo — parceiros, investidores"},
+    {key:"triage",time:"16:30",lane:"area",label:"Inbox & Teams Triage"},
+    {key:"eod",time:"17:00",lane:"area",label:"End-of-Day Review — fechar MITs, revisar pendências do Hub"},
+  ];
+}
+function _calWeeklyItems(){
+  return [
+    {key:"bridge",time:"09:00",lane:"team",label:"Weekly Bridge Sync (30–45 min) com os leads"},
+    {key:"peerreview",time:"—",lane:"area",label:"Peer & Research Review (30 min) — registrar aprendizados"},
+  ];
+}
+function _calMonthlyItems(){
+  return [
+    {key:"mbr_preread",time:"-48h",lane:"company",label:"Pre-read da MBR enviado (Overview revisado antes)"},
+    {key:"mbr_run",time:"10:00",lane:"company",label:"Monthly Business Review conduzida (90–120 min)"},
+    {key:"mbr_cascade",time:"pós-MBR",lane:"company",label:"Cascata de prioridades do próximo mês definida por função"},
+  ];
+}
+function _calLanePill(lane){
+  const map={team:"TIME",area:"ÁREA",company:"EMPRESA"};
+  return `<span class="lane-pill lane-${lane}">${map[lane]}</span>`;
+}
+function _calTodosForDay(key){
+  return (todoItems||[]).filter(t=>t.expected_date&&t.expected_date.slice(0,10)===key&&!t.settlement_date);
+}
+
+function renderCOOCalendar(){
+  const grid=document.getElementById('cal-grid');
+  if(!grid)return; // sector ainda não está no DOM (defensivo)
+  const today=_calToday();
+  if(_calViewYear===null){_calViewYear=today.getFullYear();_calViewMonth=today.getMonth();}
+  if(_calSelectedDate===null){_calSelectedDate=new Date(today);}
+
+  document.getElementById('cal-month-label').textContent=COO_MONTHS[_calViewMonth]+" "+_calViewYear;
+  let html=COO_DOW.map(d=>`<div class="cal-dow">${d}</div>`).join('');
+
+  const firstOfMonth=new Date(_calViewYear,_calViewMonth,1);
+  let startOffset=firstOfMonth.getDay()-1;
+  if(startOffset<0)startOffset=6;
+  const daysInMonth=new Date(_calViewYear,_calViewMonth+1,0).getDate();
+
+  for(let i=0;i<startOffset;i++)html+='<div class="cal-cell empty"></div>';
+
+  for(let day=1;day<=daysInMonth;day++){
+    const d=new Date(_calViewYear,_calViewMonth,day);
+    const weekend=_calIsWeekend(d);
+    const isToday=_calSameDay(d,today);
+    const isSelected=_calSameDay(d,_calSelectedDate);
+    let badges='';
+    if(!weekend){
+      badges+='<span class="cal-badge b-huddle">Huddle</span>';
+      if(_calIsMonday(d))badges+='<span class="cal-badge b-bridge">Bridge</span>';
+      if(_calIsMBRDay(d))badges+='<span class="cal-badge b-mbr">MBR</span>';
+      if(_calIsTueThu(d))badges+='<span class="cal-badge b-1on1">1:1</span>';
+    }
+    const key=_calDayKey(d);
+    const dueTodos=_calTodosForDay(key);
+    if(dueTodos.length)badges+=`<span class="cal-badge b-todo">${dueTodos.length>1?dueTodos.length+' tarefas':'Tarefa'}</span>`;
+    const st=_calStateByDay[key];
+    let progressMini='';
+    if(st){
+      const total=Object.keys(st).filter(k=>k!=='oneOnOneName').length;
+      const done=Object.values(st).filter(v=>typeof v==='boolean'&&v).length;
+      if(total>0)progressMini=`<div class="cal-progress-mini">${done}/${total}</div>`;
+    }
+    html+=`<div class="cal-cell${weekend?' weekend':''}${isSelected?' selected':''}${isToday?' today':''}" data-date="${key}">
+      <div class="cal-daynum">${day}</div>
+      <div class="cal-badges">${badges}</div>
+      ${progressMini}
+    </div>`;
+  }
+  grid.innerHTML=html;
+
+  grid.querySelectorAll('.cal-cell:not(.empty)').forEach(cell=>{
+    cell.addEventListener('click',()=>{
+      const [y,m,dd]=cell.dataset.date.split('-').map(Number);
+      _calSelectedDate=new Date(y,m-1,dd);
+      renderCOOCalendar();
+      _calRenderChecklist();
+    });
+  });
+  _calRenderChecklist();
+}
+
+function _calGetState(key){if(!_calStateByDay[key])_calStateByDay[key]={};return _calStateByDay[key];}
+
+function _calSectionHtml(title,items,state){
+  const rows=items.map(it=>{
+    const checked=!!state[it.key];
+    return `<div class="chk-item${checked?' done':''}">
+      <input type="checkbox" id="chk-${it.key}" data-key="${it.key}" ${checked?'checked':''}/>
+      <label for="chk-${it.key}"><span class="chk-time">${it.time}</span>${it.label}</label>
+      ${_calLanePill(it.lane)}
+    </div>`;
+  }).join('');
+  return `<div class="chk-section"><h4>${title}</h4>${rows}</div>`;
+}
+
+function _calRenderChecklist(){
+  const body=document.getElementById('chk-body');
+  if(!body)return;
+  const key=_calDayKey(_calSelectedDate);
+  const weekend=_calIsWeekend(_calSelectedDate);
+  const dateLabel=_calSelectedDate.toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
+  document.getElementById('chk-date').textContent=dateLabel;
+  const dueTodos=_calTodosForDay(key);
+  const todoHtml=dueTodos.length?`<div class="chk-section"><h4>Tarefas com prazo neste dia (To Do)</h4>${dueTodos.map(t=>`
+    <div class="chk-todo-item">
+      <div><div class="chk-todo-name">${t.name||''}</div><div class="chk-todo-meta">${t.stage||''}${t.priority?' · '+t.priority:''}</div></div>
+      <button onclick="showSector('todo');setTimeout(()=>{if(typeof openTodoModal==='function')openTodoModal(${t.id})},50)">Abrir</button>
+    </div>`).join('')}</div>`:'';
+
+  if(weekend){
+    document.getElementById('chk-title').textContent='Fim de semana';
+    body.innerHTML=todoHtml+'<div class="chk-weekend-msg">Sem rotina operacional programada. Bom descanso.</div>';
+    document.getElementById('chk-fill').style.width='0%';
+    document.getElementById('chk-progress-label').textContent=dueTodos.length?'':'—';
+    return;
+  }
+  document.getElementById('chk-title').textContent='Checklist do dia';
+  const state=_calGetState(key);
+  let html=todoHtml+_calSectionHtml('Rotina diária',_calDailyItems(),state);
+
+  if(_calIsTueThu(_calSelectedDate)){
+    const name=state.oneOnOneName||'';
+    const checked=!!state['oneonone'];
+    html+=`<div class="chk-section"><h4>1:1 do dia</h4>
+      <div class="chk-item${checked?' done':''}">
+        <input type="checkbox" id="chk-oneonone" data-key="oneonone" ${checked?'checked':''}/>
+        <label for="chk-oneonone"><span class="chk-time">11:30</span>1:1 realizado com direto</label>
+        ${_calLanePill('team')}
+      </div>
+      <div class="chk-1on1-input">Com quem: <input type="text" id="chk-oneOnOneName" placeholder="nome do direto" value="${name}"/></div>
+    </div>`;
+  }
+  if(_calIsMonday(_calSelectedDate))html+=_calSectionHtml('Ritual semanal (2ª-feira)',_calWeeklyItems(),state);
+  if(_calIsMBRDay(_calSelectedDate))html+=_calSectionHtml('Ritual mensal — Monthly Business Review',_calMonthlyItems(),state);
+
+  body.innerHTML=html;
+  body.querySelectorAll('input[type=checkbox]').forEach(cb=>{
+    cb.addEventListener('change',()=>{state[cb.dataset.key]=cb.checked;_calRenderChecklist();renderCOOCalendar();});
+  });
+  const nameInput=document.getElementById('chk-oneOnOneName');
+  if(nameInput)nameInput.addEventListener('input',()=>{state.oneOnOneName=nameInput.value;});
+
+  const boolVals=Object.entries(state).filter(([k,v])=>k!=='oneOnOneName'&&typeof v==='boolean');
+  const total=boolVals.length,done=boolVals.filter(([k,v])=>v).length;
+  const pct=total?Math.round((done/total)*100):0;
+  document.getElementById('chk-fill').style.width=pct+'%';
+  document.getElementById('chk-progress-label').textContent=`${done} / ${total}`;
+}
+
+function _calInitNav(){
+  const prev=document.getElementById('cal-prev'),next=document.getElementById('cal-next'),todayBtn=document.getElementById('cal-today'),resetBtn=document.getElementById('chk-reset');
+  if(prev)prev.addEventListener('click',()=>{_calViewMonth--;if(_calViewMonth<0){_calViewMonth=11;_calViewYear--;}renderCOOCalendar();});
+  if(next)next.addEventListener('click',()=>{_calViewMonth++;if(_calViewMonth>11){_calViewMonth=0;_calViewYear++;}renderCOOCalendar();});
+  if(todayBtn)todayBtn.addEventListener('click',()=>{const t=_calToday();_calViewYear=t.getFullYear();_calViewMonth=t.getMonth();_calSelectedDate=new Date(t);renderCOOCalendar();});
+  if(resetBtn)resetBtn.addEventListener('click',()=>{const key=_calDayKey(_calSelectedDate);_calStateByDay[key]={};_calRenderChecklist();renderCOOCalendar();});
 }
 
 // ══════════════════════════════════════════════════════════
@@ -2126,6 +2632,110 @@ function exportROSubPDF(sub){
 }
 function exportROPDF(){exportROSubPDF('risks');}
 
+// ══════════════════════════════════════════════════════════
+//  RACI — matriz de responsabilidades e alçada de decisão
+// ══════════════════════════════════════════════════════════
+let raciItems=[];
+let editingRaciId=null;
+function openRaciModal(id=null){
+  editingRaciId=id;
+  const item=id?raciItems.find(x=>String(x.id)===String(id)):null;
+  document.getElementById('raci-modal-title').textContent=id?'Editar decisão':'Nova decisão';
+  document.getElementById('raci-decision').value=item?(item.decision||''):'';
+  document.getElementById('raci-category').value=item?(item.category||''):'';
+  document.getElementById('raci-responsible').value=item?(item.responsible||''):'';
+  document.getElementById('raci-accountable').value=item?(item.accountable||''):'';
+  document.getElementById('raci-consulted').value=item?(item.consulted||''):'';
+  document.getElementById('raci-informed').value=item?(item.informed||''):'';
+  document.getElementById('raci-notes').value=item?(item.notes||''):'';
+  document.getElementById('raci-modal').classList.add('vis');
+}
+function closeRaciModal(){document.getElementById('raci-modal').classList.remove('vis');}
+async function saveRaciItem(){
+  const decision=document.getElementById('raci-decision').value.trim();
+  if(!decision){alert('Decisão / atividade é obrigatória');return;}
+  const body={
+    decision,
+    category:document.getElementById('raci-category').value.trim(),
+    responsible:document.getElementById('raci-responsible').value.trim(),
+    accountable:document.getElementById('raci-accountable').value.trim(),
+    consulted:document.getElementById('raci-consulted').value.trim(),
+    informed:document.getElementById('raci-informed').value.trim(),
+    notes:document.getElementById('raci-notes').value.trim(),
+  };
+  try{
+    if(editingRaciId){
+      await patch('raci_matrix',body,`?id=eq.${editingRaciId}`);
+      const item=raciItems.find(x=>String(x.id)===String(editingRaciId));
+      if(item)Object.assign(item,body);
+      showToast('Atualizado!');
+    }else{
+      const r=await post('raci_matrix',body);
+      raciItems.unshift(r[0]);
+      showToast('Decisão criada!');
+    }
+    closeRaciModal();
+    renderRaci();
+  }catch(e){showToast('Erro: '+e.message,true);}
+}
+async function delRaciItem(id){
+  if(!confirm('Excluir este item da matriz RACI?'))return;
+  try{
+    await del('raci_matrix',`?id=eq.${id}`);
+    raciItems=raciItems.filter(x=>String(x.id)!==String(id));
+    renderRaci();
+    showToast('Excluído');
+  }catch(e){showToast('Erro',true);}
+}
+function _raciChips(names,cls){
+  if(!names)return '<span style="color:var(--text3)">—</span>';
+  return names.split(',').map(n=>n.trim()).filter(Boolean).map(n=>`<span class="raci-chip ${cls}">${n}</span>`).join('');
+}
+function renderRaci(){
+  const tbody=document.getElementById('raci-tbody');
+  if(!tbody)return;
+  const totalEl=document.getElementById('raci-m-total');if(totalEl)totalEl.textContent=raciItems.length;
+  const cats=[...new Set(raciItems.map(x=>x.category).filter(Boolean))].sort();
+  const catsEl=document.getElementById('raci-m-cats');if(catsEl)catsEl.textContent=cats.length;
+  const catSel=document.getElementById('raci-filter-cat');
+  const curCat=catSel?catSel.value:'';
+  if(catSel)catSel.innerHTML='<option value="">Todas as categorias</option>'+cats.map(c=>`<option value="${c}"${c===curCat?' selected':''}>${c}</option>`).join('');
+  const dl=document.getElementById('raci-cat-list');
+  if(dl)dl.innerHTML=cats.map(c=>`<option value="${c}"></option>`).join('');
+  const search=(document.getElementById('raci-search')||{value:''}).value.toLowerCase();
+  let list=raciItems.filter(r=>{
+    if(search&&!(r.decision||'').toLowerCase().includes(search))return false;
+    if(curCat&&r.category!==curCat)return false;
+    return true;
+  });
+  tbody.innerHTML=list.length?list.map(r=>`
+    <tr>
+      <td><div class="raci-decision">${r.decision}</div>${r.category?`<div class="raci-cat">${r.category}</div>`:''}${r.notes?`<div class="raci-cat" style="margin-top:4px">${r.notes}</div>`:''}</td>
+      <td>${_raciChips(r.responsible,'r')}</td>
+      <td>${_raciChips(r.accountable,'a')}</td>
+      <td>${_raciChips(r.consulted,'c')}</td>
+      <td>${_raciChips(r.informed,'i')}</td>
+      <td style="white-space:nowrap">
+        <button onclick="openRaciModal(${r.id})" style="background:none;border:none;cursor:pointer;color:var(--text2);font-size:14px"><i class="ti ti-pencil"></i></button>
+        <button onclick="delRaciItem(${r.id})" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:14px"><i class="ti ti-trash"></i></button>
+      </td>
+    </tr>`).join(''):'<tr><td colspan="6" style="text-align:center;color:var(--text3);padding:2rem 0">Nenhuma decisão mapeada ainda. Clique em "Nova decisão" para começar.</td></tr>';
+}
+function exportRaciPDF(){
+  const{jsPDF}=window.jspdf;const doc=new jsPDF();
+  let y=pdfHeader(doc,'Matriz RACI');
+  if(!raciItems.length){doc.setFont('helvetica','normal');doc.setFontSize(11);doc.text('Nenhuma decisão mapeada.',14,y);}
+  raciItems.forEach(r=>{
+    if(y>255){doc.addPage();y=20;}
+    doc.setFont('helvetica','bold');doc.setFontSize(11);doc.setTextColor(26,26,24);
+    doc.text(r.decision||'',14,y,{maxWidth:180});y+=6;
+    doc.setFont('helvetica','normal');doc.setFontSize(9);doc.setTextColor(80,80,80);
+    doc.text('R: '+(r.responsible||'—')+'   A: '+(r.accountable||'—')+'   C: '+(r.consulted||'—')+'   I: '+(r.informed||'—'),16,y,{maxWidth:175});y+=6;
+    doc.setTextColor(180,180,175);doc.line(14,y+2,196,y+2);y+=8;
+  });
+  doc.save('raci_matrix.pdf');showToast('PDF gerado!');
+}
+
 
 
 // ══════════════════════════════════════════════════════════
@@ -2340,6 +2950,7 @@ async function loadAll(){
     ['risk_incidents','?order=date.asc'],
     ['risk_desenquadramentos','?order=date.asc'],
     ['risk_indicators','?order=id.asc'],
+    ['raci_matrix','?order=id.desc'],
     ['brainstorm_notes','?order=id.desc'],
     ['todos','?order=id.desc'],
   ];
@@ -2358,7 +2969,7 @@ async function loadAll(){
     }
     const [ps,comps,sessions,bts,comments,persp,ativs,pdis,milestones,fb,cargo,
            tps,tpComps,tpContacts,tpSlas,tpEvals,tpRisks,
-           risks,incidents,desenqs,indicators,notes,todos]=results;
+           risks,incidents,desenqs,indicators,raci,notes,todos]=results;
 
     brainstormNotes=notes||[];
     todoItems=todos||[];
@@ -2388,10 +2999,13 @@ async function loadAll(){
     roIncidents=(incidents||[]).map(i=>({...i,title:i.title||i.name||''}));
     roDesenqs=(desenqs||[]).map(d=>({...d,title:d.title||d.name||''}));
     roIndicators=(indicators||[]).map(i=>({...i,title:i.name||i.title||''}));
+    raciItems=raci||[];
 
     renderCards();
     renderTPCards();
     renderROSub();
+    if(typeof renderRaci==='function')renderRaci();
+    if(typeof renderOverview==='function')renderOverview();
     syncOk();
   }catch(e){
     showToast('Erro ao carregar: '+e.message,true);
@@ -2679,11 +3293,13 @@ function saveTodo(){
       const t=todoItems.find(x=>x.id===editingTodoId);
       if(t)Object.assign(t,payload);
       closeTodoModal();renderTodos();showToast('Tarefa atualizada');
+      if(typeof renderCOOCalendar==='function')renderCOOCalendar();
     }).catch(e=>showToast('Erro: '+e.message,true));
   }else{
     post('todos',payload).then(r=>{
       todoItems.unshift(r[0]);
       closeTodoModal();renderTodos();showToast('Tarefa criada');
+      if(typeof renderCOOCalendar==='function')renderCOOCalendar();
     }).catch(e=>showToast('Erro: '+e.message,true));
   }
 }
@@ -2692,6 +3308,7 @@ function delTodo(id){
   del('todos',`?id=eq.${id}`).then(()=>{
     todoItems=todoItems.filter(x=>x.id!==id);
     renderTodos();showToast('Tarefa excluída');
+    if(typeof renderCOOCalendar==='function')renderCOOCalendar();
   }).catch(e=>showToast('Erro',true));
 }
 
