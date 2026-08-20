@@ -1839,8 +1839,12 @@ function _calRenderChecklist(){
   const dueTodos=_calTodosForDay(key);
   const todoHtml=dueTodos.length?`<div class="chk-section"><h4>Tarefas com prazo neste dia (To Do)</h4>${dueTodos.map(t=>`
     <div class="chk-todo-item">
-      <div><div class="chk-todo-name">${t.name||''}</div><div class="chk-todo-meta">${t.stage||''}${t.priority?' · '+t.priority:''}</div></div>
-      <button onclick="showSector('todo');setTimeout(()=>{if(typeof openTodoModal==='function')openTodoModal(${t.id})},50)">Abrir</button>
+      <div><div class="chk-todo-name">${t.name||''}</div><div class="chk-todo-meta">${t.stage||''}${t.priority?' · '+t.priority:''}${t.owner?' · '+t.owner:''}</div></div>
+      <div style="display:flex;gap:6px;flex-shrink:0">
+        <button onclick="openTodoModal(${t.id})" title="Editar esta tarefa">Editar</button>
+        <button onclick="quickCompleteTodo(${t.id})" title="Marcar como concluída" style="padding:4px 8px"><i class="ti ti-square-rounded-check"></i></button>
+        <button onclick="delTodo(${t.id})" title="Excluir esta tarefa" style="padding:4px 8px;color:var(--text3)"><i class="ti ti-trash"></i></button>
+      </div>
     </div>`).join('')}</div>`:'';
   const state=_calGetState(key);
   const customHtml=_calCustomItemsHtml(state);
